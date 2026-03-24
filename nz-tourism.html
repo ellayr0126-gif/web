@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴질랜드 — 순수한 자연의 나라</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --jade: #1a6b4a;
+    --jade-light: #2d8f63;
+    --jade-dark: #0e3d2a;
+    --cream: #f5f0e8;
+    --sand: #c9b99a;
+    --sky: #7db8d4;
+    --white: #faf9f6;
+    --charcoal: #1c1c1c;
+    --mist: rgba(255,255,255,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 60px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+    transition: background 0.4s;
+  }
+  nav.scrolled { background: rgba(14,61,42,0.95); backdrop-filter: blur(12px); }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; letter-spacing: 2px;
+    color: var(--white); text-decoration: none;
+  }
+  .nav-logo span { color: var(--sand); font-style: italic; }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.8); text-decoration: none;
+    font-size: 0.8rem; font-weight: 300; letter-spacing: 2px;
+    text-transform: uppercase; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--sand); }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      linear-gradient(160deg, rgba(14,61,42,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(125,184,212,0.2) 100%),
+      url('https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=1800&q=80') center/cover no-repeat;
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.06); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--sand); margin-bottom: 20px; font-weight: 300;
+    animation: fadeUp 1.4s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 300; line-height: 1;
+    letter-spacing: -1px; margin-bottom: 24px;
+    animation: fadeUp 1.4s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .hero-title em {
+    font-style: italic; color: var(--sand);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1rem; font-weight: 200; letter-spacing: 1px;
+    color: rgba(255,255,255,0.75); max-width: 420px; margin: 0 auto 40px;
+    line-height: 1.8;
+    animation: fadeUp 1.4s 0.45s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .hero-cta {
+    display: inline-flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 1.4s 0.6s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .btn {
+    padding: 14px 36px; font-size: 0.75rem; letter-spacing: 3px;
+    text-transform: uppercase; text-decoration: none; font-family: 'Jost', sans-serif;
+    font-weight: 400; transition: all 0.35s; cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--jade); color: #fff;
+  }
+  .btn-primary:hover { background: var(--jade-light); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,0.5);
+  }
+  .btn-outline:hover { border-color: var(--sand); color: var(--sand); transform: translateY(-2px); }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.5); font-size: 0.65rem; letter-spacing: 3px;
+    text-transform: uppercase; animation: bounce 2s ease-in-out infinite;
+  }
+
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── INTRO STRIP ── */
+  .intro-strip {
+    background: var(--jade-dark);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .stat-item {
+    padding: 40px; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: rgba(255,255,255,0.04); }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; font-weight: 300; color: var(--sand);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-top: 8px;
+  }
+
+  /* ── SECTION ── */
+  section { padding: 120px 60px; }
+
+  .section-tag {
+    font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--jade-light); margin-bottom: 16px; font-weight: 400;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 300;
+    line-height: 1.15; color: var(--white);
+  }
+
+  .section-title em { font-style: italic; color: var(--sand); }
+
+  /* ── DESTINATIONS GRID ── */
+  .dest-section { background: #111; }
+  .dest-header { max-width: 600px; margin: 0 auto 70px; text-align: center; }
+  .dest-header .section-title { margin-bottom: 20px; }
+  .dest-header p { color: rgba(255,255,255,0.5); line-height: 1.8; font-weight: 200; }
+
+  .dest-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 380px 260px;
+    gap: 12px; max-width: 1300px; margin: 0 auto;
+  }
+
+  .dest-card {
+    position: relative; overflow: hidden; cursor: pointer;
+    group: true;
+  }
+
+  .dest-card:first-child {
+    grid-column: 1 / 2; grid-row: 1 / 3;
+  }
+
+  .dest-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    display: block;
+  }
+  .dest-card:hover img { transform: scale(1.07); }
+
+  .dest-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 28px;
+  }
+
+  .dest-tag {
+    font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sand); margin-bottom: 6px;
+  }
+  .dest-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400; color: #fff;
+    line-height: 1.2;
+  }
+  .dest-card:first-child .dest-name { font-size: 2.2rem; }
+
+  .dest-card .dest-arrow {
+    position: absolute; top: 20px; right: 20px;
+    width: 36px; height: 36px; background: var(--jade);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: translateY(-6px); transition: all 0.3s;
+    font-size: 1rem;
+  }
+  .dest-card:hover .dest-arrow { opacity: 1; transform: translateY(0); }
+
+  /* ── EXPERIENCES ── */
+  .exp-section { background: var(--jade-dark); }
+  .exp-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+
+  .exp-visual { position: relative; }
+  .exp-img-main {
+    width: 100%; aspect-ratio: 4/5; object-fit: cover;
+  }
+  .exp-img-float {
+    position: absolute; bottom: -30px; right: -30px;
+    width: 55%; aspect-ratio: 3/2; object-fit: cover;
+    border: 4px solid var(--jade-dark);
+  }
+
+  .exp-text { padding-left: 20px; }
+  .exp-text .section-title { margin-bottom: 24px; }
+  .exp-text p { color: rgba(255,255,255,0.6); line-height: 1.9; font-weight: 200; margin-bottom: 40px; }
+
+  .exp-list { list-style: none; margin-bottom: 40px; }
+  .exp-list li {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.9rem; color: rgba(255,255,255,0.7); font-weight: 300;
+  }
+  .exp-list li::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--sand); flex-shrink: 0;
+  }
+
+  /* ── SEASONS ── */
+  .seasons-section { background: #0d0d0d; }
+  .seasons-header { text-align: center; max-width: 500px; margin: 0 auto 60px; }
+  .seasons-header .section-title { margin-bottom: 16px; }
+  .seasons-header p { color: rgba(255,255,255,0.5); font-weight: 200; line-height: 1.8; }
+
+  .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.08); max-width: 1200px; margin: 0 auto; }
+
+  .season-card {
+    background: #0d0d0d; padding: 50px 36px;
+    position: relative; overflow: hidden;
+    transition: background 0.4s;
+  }
+  .season-card:hover { background: var(--jade-dark); }
+
+  .season-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem; font-weight: 300; color: rgba(255,255,255,0.05);
+    position: absolute; top: 10px; right: 20px; line-height: 1;
+  }
+
+  .season-icon { font-size: 2rem; margin-bottom: 20px; }
+  .season-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400; margin-bottom: 8px;
+  }
+  .season-months {
+    font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sand); margin-bottom: 16px;
+  }
+  .season-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.8; font-weight: 200; }
+
+  /* ── GALLERY STRIP ── */
+  .gallery-strip {
+    display: flex; gap: 0; overflow: hidden;
+    height: 320px;
+  }
+
+  .gallery-strip img {
+    flex: 1; object-fit: cover; filter: saturate(0.7);
+    transition: flex 0.6s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s;
+    min-width: 0;
+  }
+  .gallery-strip img:hover { flex: 3; filter: saturate(1); }
+
+  /* ── TIPS ── */
+  .tips-section { background: var(--cream); color: var(--charcoal); }
+  .tips-inner { max-width: 1100px; margin: 0 auto; }
+  .tips-inner .section-tag { color: var(--jade); }
+  .tips-inner .section-title { color: var(--charcoal); margin-bottom: 50px; }
+  .tips-inner .section-title em { color: var(--jade); }
+
+  .tips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+
+  .tip-card { border-top: 2px solid var(--jade); padding-top: 24px; }
+  .tip-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 300; color: var(--sand);
+    line-height: 1; margin-bottom: 12px;
+  }
+  .tip-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 12px; color: var(--jade-dark); }
+  .tip-text { font-size: 0.85rem; color: #555; line-height: 1.8; font-weight: 300; }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    position: relative; padding: 160px 60px; text-align: center; overflow: hidden;
+  }
+
+  .cta-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(rgba(10,40,25,0.75), rgba(10,40,25,0.75)),
+      url('https://images.unsplash.com/photo-1469521669194-babb45599def?w=1800&q=80') center/cover;
+  }
+
+  .cta-content { position: relative; z-index: 2; }
+  .cta-content .section-title { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 20px; }
+  .cta-content p { color: rgba(255,255,255,0.65); font-weight: 200; max-width: 420px; margin: 0 auto 40px; line-height: 1.8; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080808; padding: 60px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 40px;
+  }
+
+  .footer-brand .nav-logo { font-size: 2rem; display: block; margin-bottom: 12px; }
+  .footer-brand p { color: rgba(255,255,255,0.35); font-size: 0.8rem; font-weight: 200; max-width: 280px; line-height: 1.8; }
+
+  .footer-links { display: flex; gap: 60px; }
+  .footer-col h4 {
+    font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sand); margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.82rem; font-weight: 200; transition: color 0.3s; }
+  .footer-col a:hover { color: var(--white); }
+
+  .footer-bottom {
+    max-width: 1200px; margin: 40px auto 0;
+    padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    color: rgba(255,255,255,0.25); font-size: 0.75rem; font-weight: 200;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 1024px) {
+    nav { padding: 20px 30px; }
+    .nav-links { gap: 20px; }
+    section { padding: 80px 30px; }
+    .dest-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+    .dest-card:first-child { grid-column: 1; grid-row: 1; }
+    .exp-inner { grid-template-columns: 1fr; gap: 60px; }
+    .exp-img-float { display: none; }
+    .seasons-grid { grid-template-columns: repeat(2, 1fr); }
+    .intro-strip { grid-template-columns: repeat(2, 1fr); }
+    .tips-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-links { gap: 30px; }
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 18px 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .dest-grid { grid-template-columns: 1fr; }
+    .seasons-grid { grid-template-columns: 1fr; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .footer-links { flex-direction: column; gap: 20px; }
+    .footer-inner { flex-direction: column; }
+    .gallery-strip { height: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">100% <span>Pure</span> New Zealand</a>
+  <ul class="nav-links">
+    <li><a href="#destinations">여행지</a></li>
+    <li><a href="#experiences">체험</a></li>
+    <li><a href="#seasons">시즌</a></li>
+    <li><a href="#tips">여행정보</a></li>
+    <li><a href="#contact" class="btn btn-primary" style="padding:10px 24px;">예약하기</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Welcome to New Zealand</p>
+    <h1 class="hero-title">
+      순수한 자연,<br>
+      <em>끝없는 감동</em>
+    </h1>
+    <p class="hero-sub">지구 끝에서 만나는 비길 데 없는 아름다움 — 피오르드에서 화산, 그리고 별빛 가득한 하늘까지.</p>
+    <div class="hero-cta">
+      <a href="#destinations" class="btn btn-primary">여행지 탐색</a>
+      <a href="#experiences" class="btn btn-outline">체험 보기</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="intro-strip">
+  <div class="stat-item reveal">
+    <div class="stat-num">268k</div>
+    <div class="stat-label">㎢ 국토면적</div>
+  </div>
+  <div class="stat-item reveal reveal-delay-1">
+    <div class="stat-num">14</div>
+    <div class="stat-label">국립공원</div>
+  </div>
+  <div class="stat-item reveal reveal-delay-2">
+    <div class="stat-num">9</div>
+    <div class="stat-label">세계문화유산</div>
+  </div>
+  <div class="stat-item reveal reveal-delay-3">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">잊지 못할 순간</div>
+  </div>
+</div>
+
+<!-- DESTINATIONS -->
+<section class="dest-section" id="destinations">
+  <div class="dest-header reveal">
+    <p class="section-tag">Must-See Destinations</p>
+    <h2 class="section-title">꼭 가봐야 할<br><em>여행지</em></h2>
+    <p>북섬의 화산 지형부터 남섬의 빙하와 피오르드까지, 뉴질랜드는 다양한 경이로움을 품고 있습니다.</p>
+  </div>
+  <div class="dest-grid">
+    <div class="dest-card reveal">
+      <img src="https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=900&q=80" alt="밀퍼드 사운드">
+      <div class="dest-overlay">
+        <div class="dest-tag">남섬 • 피오르드랜드</div>
+        <div class="dest-name">밀퍼드 사운드</div>
+      </div>
+      <div class="dest-arrow">→</div>
+    </div>
+
+    <div class="dest-card reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=700&q=80" alt="로토루아">
+      <div class="dest-overlay">
+        <div class="dest-tag">북섬 • 베이 오브 플렌티</div>
+        <div class="dest-name">로토루아</div>
+      </div>
+      <div class="dest-arrow">→</div>
+    </div>
+
+    <div class="dest-card reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1469521669194-babb45599def?w=700&q=80" alt="퀸스타운">
+      <div class="dest-overlay">
+        <div class="dest-tag">남섬 • 오타고</div>
+        <div class="dest-name">퀸스타운</div>
+      </div>
+      <div class="dest-arrow">→</div>
+    </div>
+
+    <div class="dest-card reveal reveal-delay-1">
+      <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=700&q=80" alt="통가리로">
+      <div class="dest-overlay">
+        <div class="dest-tag">북섬 • 중심부</div>
+        <div class="dest-name">통가리로 국립공원</div>
+      </div>
+      <div class="dest-arrow">→</div>
+    </div>
+
+    <div class="dest-card reveal reveal-delay-2">
+      <img src="https://images.unsplash.com/photo-1484533082696-6bfe8e3b2553?w=700&q=80" alt="호키티카">
+      <div class="dest-overlay">
+        <div class="dest-tag">남섬 • 웨스트코스트</div>
+        <div class="dest-name">프란츠 요셉 빙하</div>
+      </div>
+      <div class="dest-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCES -->
+<section class="exp-section" id="experiences">
+  <div class="exp-inner">
+    <div class="exp-visual reveal">
+      <img class="exp-img-main" src="https://images.unsplash.com/photo-1571155236710-d4e1c47a1f64?w=700&q=80" alt="체험">
+      <img class="exp-img-float" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80" alt="마오리 문화">
+    </div>
+    <div class="exp-text reveal reveal-delay-1">
+      <p class="section-tag">Unique Experiences</p>
+      <h2 class="section-title">잊을 수 없는<br><em>특별한 체험</em></h2>
+      <p>뉴질랜드는 단순히 보는 여행이 아닙니다. 번지점프, 스카이다이빙, 마오리 문화 체험, 호빗마을 방문 — 모든 순간이 이야기가 됩니다.</p>
+      <ul class="exp-list">
+        <li>퀸스타운 번지점프 & 스카이다이빙</li>
+        <li>마오리 전통 문화 & 항기 체험</li>
+        <li>호빗마을 (마타마타) 투어</li>
+        <li>밀퍼드 사운드 크루즈</li>
+        <li>와이토모 반딧불이 동굴 탐험</li>
+        <li>와카티푸 호수 제트보트</li>
+      </ul>
+      <a href="#" class="btn btn-primary">모든 체험 보기</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+<div class="gallery-strip">
+  <img src="https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=600&q=80" alt="피오르드">
+  <img src="https://images.unsplash.com/photo-1469521669194-babb45599def?w=600&q=80" alt="퀸스타운">
+  <img src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=600&q=80" alt="로토루아">
+  <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&q=80" alt="통가리로">
+  <img src="https://images.unsplash.com/photo-1484533082696-6bfe8e3b2553?w=600&q=80" alt="빙하">
+  <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=600&q=80" alt="마오리">
+</div>
+
+<!-- SEASONS -->
+<section class="seasons-section" id="seasons">
+  <div class="seasons-header reveal">
+    <p class="section-tag">Best Time to Visit</p>
+    <h2 class="section-title">언제 가도<br><em>완벽한 뉴질랜드</em></h2>
+    <p>계절마다 다른 매력을 품은 뉴질랜드, 당신의 여행 스타일에 맞는 시즌을 골라보세요.</p>
+  </div>
+  <div class="seasons-grid">
+    <div class="season-card reveal">
+      <div class="season-num">01</div>
+      <div class="season-icon">🌸</div>
+      <div class="season-title">봄</div>
+      <div class="season-months">9월 — 11월</div>
+      <p class="season-desc">꽃이 만발하는 계절. 트레킹과 야외활동 최적기. 관광객이 적어 여유롭게 즐길 수 있습니다.</p>
+    </div>
+    <div class="season-card reveal reveal-delay-1">
+      <div class="season-num">02</div>
+      <div class="season-icon">☀️</div>
+      <div class="season-title">여름</div>
+      <div class="season-months">12월 — 2월</div>
+      <p class="season-desc">해변과 야외 액티비티의 절정. 밀퍼드 트랙 등 인기 트레일은 사전 예약 필수입니다.</p>
+    </div>
+    <div class="season-card reveal reveal-delay-2">
+      <div class="season-num">03</div>
+      <div class="season-icon">🍂</div>
+      <div class="season-title">가을</div>
+      <div class="season-months">3월 — 5월</div>
+      <p class="season-desc">황금빛 단풍과 맑은 하늘. 와인 수확 시즌으로 말보로 와이너리 방문 추천.</p>
+    </div>
+    <div class="season-card reveal reveal-delay-3">
+      <div class="season-num">04</div>
+      <div class="season-icon">❄️</div>
+      <div class="season-title">겨울</div>
+      <div class="season-months">6월 — 8월</div>
+      <p class="season-desc">퀸스타운 스키 시즌! 서던 알프스의 설경은 압도적. 오로라 관측 기회도 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="tips-section" id="tips">
+  <div class="tips-inner">
+    <p class="section-tag reveal">Travel Essentials</p>
+    <h2 class="section-title reveal" style="margin-bottom:16px">알아두면 좋은<br><em>여행 팁</em></h2>
+    <div class="tips-grid" style="margin-top:50px">
+      <div class="tip-card reveal">
+        <div class="tip-num">01</div>
+        <h3 class="tip-title">입국 비자</h3>
+        <p class="tip-text">한국인은 최대 90일 무비자 입국 가능 (NZeTA 필요). 출발 전 온라인으로 신청하세요. 수수료 NZ$23 (모바일 앱 기준).</p>
+      </div>
+      <div class="tip-card reveal reveal-delay-1">
+        <div class="tip-num">02</div>
+        <h3 class="tip-title">교통 & 렌터카</h3>
+        <p class="tip-text">대중교통이 제한적이므로 렌터카 추천. 좌측통행 국가입니다. 국제운전면허증 + 한국 면허증 지참 필수.</p>
+      </div>
+      <div class="tip-card reveal reveal-delay-2">
+        <div class="tip-num">03</div>
+        <h3 class="tip-title">통화 & 결제</h3>
+        <p class="tip-text">뉴질랜드 달러(NZD) 사용. 카드 결제가 보편적이며, 현금은 소규모 지역에서 유용합니다.</p>
+      </div>
+      <div class="tip-card reveal reveal-delay-1">
+        <div class="tip-num">04</div>
+        <h3 class="tip-title">생물 검역</h3>
+        <p class="tip-text">엄격한 생물 검역 국가. 과일, 육류, 유제품 반입 금지. 신고 안 할 경우 최대 NZ$400 벌금.</p>
+      </div>
+      <div class="tip-card reveal reveal-delay-2">
+        <div class="tip-num">05</div>
+        <h3 class="tip-title">자외선 주의</h3>
+        <p class="tip-text">오존층이 얇아 자외선이 매우 강합니다. SPF 50+ 선크림 필수, 모자와 선글라스도 챙기세요.</p>
+      </div>
+      <div class="tip-card reveal reveal-delay-3">
+        <div class="tip-num">06</div>
+        <h3 class="tip-title">액티비티 예약</h3>
+        <p class="tip-text">밀퍼드 트랙, 통가리로 알파인 크로싱 등 인기 트레일은 성수기 수개월 전 예약이 필수입니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta-banner">
+  <div class="cta-bg"></div>
+  <div class="cta-content reveal">
+    <p class="section-tag" style="color:var(--sand)">Start Your Journey</p>
+    <h2 class="section-title">지금 바로<br><em>뉴질랜드로</em></h2>
+    <p>꿈꿔왔던 여행을 현실로 만들어 드립니다. 맞춤형 뉴질랜드 여행 계획을 지금 시작하세요.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="#" class="btn btn-primary">여행 계획 시작</a>
+      <a href="#" class="btn btn-outline">상담 문의</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">100% <span>Pure</span> NZ</a>
+      <p>뉴질랜드의 순수한 자연과 문화를 세계와 나누는 공식 관광 가이드입니다.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>여행지</h4>
+        <ul>
+          <li><a href="#">북섬</a></li>
+          <li><a href="#">남섬</a></li>
+          <li><a href="#">스튜어트 섬</a></li>
+          <li><a href="#">와이헤케 섬</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>체험</h4>
+        <ul>
+          <li><a href="#">어드벤처</a></li>
+          <li><a href="#">마오리 문화</a></li>
+          <li><a href="#">자연 트레킹</a></li>
+          <li><a href="#">와인 & 음식</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>여행 정보</h4>
+        <ul>
+          <li><a href="#">비자 안내</a></li>
+          <li><a href="#">교통 정보</a></li>
+          <li><a href="#">숙박 추천</a></li>
+          <li><a href="#">자주 묻는 질문</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 뉴질랜드 관광청 | Tourism New Zealand</span>
+    <span>개인정보처리방침 · 이용약관 · 사이트맵</span>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
