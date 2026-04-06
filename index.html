@@ -3,719 +3,403 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>뉴질랜드 — 순수한 자연의 나라</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<title>두물머리 물안개 축제 — Waking in the Mist</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Noto+Sans+KR:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --jade: #1a6b4a;
-    --jade-light: #2d8f63;
-    --jade-dark: #0e3d2a;
-    --cream: #f5f0e8;
-    --sand: #c9b99a;
-    --sky: #7db8d4;
-    --white: #faf9f6;
-    --charcoal: #1c1c1c;
-    --mist: rgba(255,255,255,0.07);
+    --white: #FFFFFF;
+    --mist-1: #F4F4F2;
+    --mist-2: #E2E4E6;
+    --mist-3: #C8CDD2;
+    --mist-4: #9DAAB5;
+    --navy-light: #4A6378;
+    --navy: #1E3448;
+    --navy-deep: #0D1E2D;
+    --accent: #7FA3B8;
+    --serif: 'Cormorant Garamond', 'Noto Serif KR', serif;
+    --sans: 'Noto Sans KR', sans-serif;
   }
-
   html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--white); color: var(--navy-deep); overflow-x: hidden; cursor: none; }
 
-  body {
-    font-family: 'Jost', sans-serif;
-    background: var(--charcoal);
-    color: var(--white);
-    overflow-x: hidden;
-  }
+  .cursor { position: fixed; width: 6px; height: 6px; background: var(--navy); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+  .cursor-ring { position: fixed; width: 28px; height: 28px; border: 1px solid rgba(30,52,72,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; width: 100%; z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 24px 60px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
-    transition: background 0.4s;
-  }
-  nav.scrolled { background: rgba(14,61,42,0.95); backdrop-filter: blur(12px); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 28px 56px; }
+  .nav-logo { font-family: var(--serif); font-size: 13px; letter-spacing: .25em; color: var(--white); font-weight: 300; text-transform: uppercase; opacity: .85; }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { font-size: 11px; letter-spacing: .2em; color: var(--white); text-decoration: none; font-weight: 300; opacity: .7; text-transform: uppercase; transition: opacity .3s; }
+  .nav-links a:hover { opacity: 1; }
 
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; font-weight: 400; letter-spacing: 2px;
-    color: var(--white); text-decoration: none;
-  }
-  .nav-logo span { color: var(--sand); font-style: italic; }
+  #hero { position: relative; width: 100%; height: 100vh; overflow: hidden; display: flex; align-items: flex-end; background: var(--navy-deep); }
+  .hero-bg { position: absolute; inset: 0; background-image: url('IE001754667_STD.JPG'); background-size: cover; background-position: center 30%; filter: brightness(.75) saturate(.8); transform: scale(1.06); animation: heroZoom 18s ease-out forwards; }
+  .hero-mist-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to top, rgba(13,30,45,.72) 0%, transparent 100%); pointer-events: none; }
+  .hero-mist-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(13,30,45,.35) 100%); pointer-events: none; }
 
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links a {
-    color: rgba(255,255,255,0.8); text-decoration: none;
-    font-size: 0.8rem; font-weight: 300; letter-spacing: 2px;
-    text-transform: uppercase; transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--sand); }
+  @keyframes heroZoom { from { transform: scale(1.06); } to { transform: scale(1.00); } }
 
-  /* ── HERO ── */
-  .hero {
-    height: 100vh; position: relative; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-  }
+  .hero-content { position: relative; z-index: 2; padding: 0 80px 80px; width: 100%; display: flex; flex-direction: column; }
+  .hero-eyebrow { font-size: 10.5px; letter-spacing: .35em; color: var(--mist-3); text-transform: uppercase; font-weight: 300; margin-bottom: 20px; opacity: 0; animation: fadeUp 1.2s ease .4s forwards; }
+  .hero-title { font-family: var(--serif); font-weight: 300; font-style: italic; color: var(--white); line-height: 1.05; margin-bottom: 32px; opacity: 0; animation: fadeUp 1.4s ease .7s forwards; }
+  .hero-title .line1 { font-size: clamp(52px,7vw,96px); display: block; }
+  .hero-title .line2 { font-size: clamp(52px,7vw,96px); display: block; padding-left: 3vw; }
+  .hero-title-ko { font-family: 'Noto Serif KR',serif; font-size: 14px; letter-spacing: .3em; color: var(--mist-3); font-weight: 300; margin-bottom: 48px; opacity: 0; animation: fadeUp 1.4s ease 1s forwards; }
+  .hero-meta { display: flex; gap: 56px; opacity: 0; animation: fadeUp 1.2s ease 1.3s forwards; }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 6px; }
+  .hero-meta-label { font-size: 9px; letter-spacing: .3em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; }
+  .hero-meta-value { font-family: var(--serif); font-size: 15px; color: var(--white); font-weight: 300; letter-spacing: .05em; }
 
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: 
-      linear-gradient(160deg, rgba(14,61,42,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(125,184,212,0.2) 100%),
-      url('https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=1800&q=80') center/cover no-repeat;
-    animation: slowZoom 20s ease-in-out infinite alternate;
-  }
+  .scroll-indicator { position: absolute; bottom: 40px; right: 56px; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; animation: fadeIn 1.5s ease 2s forwards; }
+  .scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,.5)); animation: scrollPulse 2s ease-in-out infinite; }
+  .scroll-text { font-size: 9px; letter-spacing: .3em; color: rgba(255,255,255,.5); text-transform: uppercase; writing-mode: vertical-rl; }
 
-  @keyframes slowZoom {
-    from { transform: scale(1); }
-    to { transform: scale(1.06); }
-  }
+  @keyframes scrollPulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
-  .hero-content {
-    position: relative; z-index: 2;
-    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) both;
-  }
+  section { position: relative; }
+  .section-inner { max-width: 1200px; margin: 0 auto; padding: 120px 80px; }
+  .section-label { font-size: 9px; letter-spacing: .4em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; margin-bottom: 64px; display: flex; align-items: center; gap: 20px; }
+  .section-label::after { content:''; display: block; width: 40px; height: 1px; background: var(--mist-3); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  #motivation { background: var(--white); }
+  .motivation-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 0 80px; align-items: start; }
+  .motivation-number { font-family: var(--serif); font-size: 120px; color: var(--mist-2); line-height: 1; font-weight: 300; margin-bottom: -20px; }
+  .motivation-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,46px); font-weight: 300; line-height: 1.3; color: var(--navy); margin-bottom: 40px; font-style: italic; }
+  .motivation-body { font-size: 14px; line-height: 2; color: var(--navy-light); font-weight: 300; max-width: 480px; }
+  .motivation-stats { margin-top: 64px; display: flex; flex-direction: column; gap: 32px; border-top: 1px solid var(--mist-2); padding-top: 48px; }
+  .stat-row { display: flex; align-items: baseline; gap: 16px; }
+  .stat-num { font-family: var(--serif); font-size: 40px; font-weight: 300; color: var(--navy); line-height: 1; }
+  .stat-unit { font-size: 10px; letter-spacing: .2em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; }
+  .stat-desc { font-size: 11px; color: var(--navy-light); font-weight: 300; line-height: 1.6; margin-top: 4px; }
 
-  .hero-eyebrow {
-    font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase;
-    color: var(--sand); margin-bottom: 20px; font-weight: 300;
-    animation: fadeUp 1.4s 0.2s cubic-bezier(0.16,1,0.3,1) both;
-  }
+  #science { background: var(--navy-deep); color: var(--white); }
+  #science .section-label { color: rgba(255,255,255,.3); }
+  #science .section-label::after { background: rgba(255,255,255,.15); }
+  .science-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,44px); font-weight: 300; font-style: italic; color: var(--white); margin-bottom: 72px; max-width: 480px; line-height: 1.3; }
+  .chart-container { position: relative; width: 100%; height: 220px; margin-bottom: 24px; }
+  .chart-svg { width: 100%; height: 100%; overflow: visible; }
+  .chart-labels { display: flex; justify-content: space-between; margin-top: 12px; }
+  .chart-label { font-size: 10px; color: rgba(255,255,255,.3); letter-spacing: .15em; font-weight: 300; }
+  .chart-label.peak { color: var(--accent); }
+  .chart-legend { margin-top: 40px; display: flex; gap: 40px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.08); padding-top: 32px; }
+  .legend-item { display: flex; flex-direction: column; gap: 8px; }
+  .legend-value { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--white); }
+  .legend-label { font-size: 9px; letter-spacing: .25em; color: rgba(255,255,255,.35); text-transform: uppercase; font-weight: 300; }
 
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3.5rem, 9vw, 8rem);
-    font-weight: 300; line-height: 1;
-    letter-spacing: -1px; margin-bottom: 24px;
-    animation: fadeUp 1.4s 0.3s cubic-bezier(0.16,1,0.3,1) both;
-  }
+  #nature { background: var(--mist-1); }
+  .nature-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 80px; align-items: start; }
+  .nature-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,44px); font-weight: 300; font-style: italic; color: var(--navy); margin-bottom: 48px; line-height: 1.3; }
+  .nature-table { width: 100%; border-collapse: collapse; }
+  .nature-table tr { border-bottom: 1px solid var(--mist-2); }
+  .nature-table td { padding: 20px 0; font-size: 13px; font-weight: 300; line-height: 1.7; vertical-align: top; }
+  .nature-table td:first-child { font-size: 9.5px; letter-spacing: .25em; color: var(--mist-4); text-transform: uppercase; width: 130px; padding-right: 24px; padding-top: 22px; }
+  .nature-table td:last-child { color: var(--navy); }
+  .nature-visual { display: flex; flex-direction: column; align-items: center; }
+  .tree-illustration { width: 100%; max-width: 260px; }
+  .tree-caption { font-size: 10px; letter-spacing: .2em; color: var(--mist-4); text-align: center; margin-top: 20px; text-transform: uppercase; font-weight: 300; line-height: 1.8; }
 
-  .hero-title em {
-    font-style: italic; color: var(--sand);
-    display: block;
-  }
+  #program { background: var(--white); }
+  .program-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,44px); font-weight: 300; font-style: italic; color: var(--navy); margin-bottom: 80px; line-height: 1.3; }
+  .program-list { display: flex; flex-direction: column; }
+  .program-item { display: grid; grid-template-columns: 80px 1fr auto; align-items: start; gap: 40px; padding: 48px 0; border-top: 1px solid var(--mist-2); opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+  .program-item.visible { opacity: 1; transform: translateY(0); }
+  .program-item:last-child { border-bottom: 1px solid var(--mist-2); }
+  .program-index { font-family: var(--serif); font-size: 11px; color: var(--mist-3); letter-spacing: .1em; margin-top: 4px; font-weight: 300; }
+  .program-name { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--navy); margin-bottom: 12px; font-style: italic; }
+  .program-name-ko { font-size: 10.5px; letter-spacing: .25em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; margin-bottom: 20px; }
+  .program-desc { font-size: 13px; line-height: 2; color: var(--navy-light); font-weight: 300; max-width: 520px; }
+  .program-tag { font-size: 9px; letter-spacing: .25em; color: var(--accent); text-transform: uppercase; font-weight: 300; margin-top: 6px; white-space: nowrap; }
 
-  .hero-sub {
-    font-size: 1rem; font-weight: 200; letter-spacing: 1px;
-    color: rgba(255,255,255,0.75); max-width: 420px; margin: 0 auto 40px;
-    line-height: 1.8;
-    animation: fadeUp 1.4s 0.45s cubic-bezier(0.16,1,0.3,1) both;
-  }
+  footer { background: var(--navy-deep); color: var(--white); }
+  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 80px 80px 56px; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 64px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.07); }
+  .footer-brand { font-family: var(--serif); font-size: 28px; font-weight: 300; font-style: italic; color: var(--white); line-height: 1.3; }
+  .footer-brand-ko { font-size: 10px; letter-spacing: .35em; color: rgba(255,255,255,.3); margin-top: 10px; font-weight: 300; }
+  .footer-info { text-align: right; display: flex; flex-direction: column; gap: 16px; }
+  .footer-info-row { font-size: 11px; color: rgba(255,255,255,.3); font-weight: 300; line-height: 1.8; }
+  .footer-info-row strong { color: rgba(255,255,255,.55); font-weight: 300; letter-spacing: .2em; text-transform: uppercase; font-size: 9px; display: block; margin-bottom: 2px; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 10px; color: rgba(255,255,255,.18); font-weight: 300; letter-spacing: .1em; }
+  .footer-sources { display: flex; gap: 24px; }
+  .footer-source { font-size: 9px; letter-spacing: .2em; color: rgba(255,255,255,.2); text-transform: uppercase; font-weight: 300; }
 
-  .hero-cta {
-    display: inline-flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-    animation: fadeUp 1.4s 0.6s cubic-bezier(0.16,1,0.3,1) both;
-  }
-
-  .btn {
-    padding: 14px 36px; font-size: 0.75rem; letter-spacing: 3px;
-    text-transform: uppercase; text-decoration: none; font-family: 'Jost', sans-serif;
-    font-weight: 400; transition: all 0.35s; cursor: pointer; border: none;
-  }
-  .btn-primary {
-    background: var(--jade); color: #fff;
-  }
-  .btn-primary:hover { background: var(--jade-light); transform: translateY(-2px); }
-  .btn-outline {
-    background: transparent; color: #fff;
-    border: 1px solid rgba(255,255,255,0.5);
-  }
-  .btn-outline:hover { border-color: var(--sand); color: var(--sand); transform: translateY(-2px); }
-
-  .hero-scroll {
-    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    color: rgba(255,255,255,0.5); font-size: 0.65rem; letter-spacing: 3px;
-    text-transform: uppercase; animation: bounce 2s ease-in-out infinite;
-  }
-
-  .scroll-line {
-    width: 1px; height: 50px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(8px); }
-  }
-
-  /* ── INTRO STRIP ── */
-  .intro-strip {
-    background: var(--jade-dark);
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .stat-item {
-    padding: 40px; text-align: center;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    transition: background 0.3s;
-  }
-  .stat-item:last-child { border-right: none; }
-  .stat-item:hover { background: rgba(255,255,255,0.04); }
-
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.8rem; font-weight: 300; color: var(--sand);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
-    color: rgba(255,255,255,0.5); margin-top: 8px;
-  }
-
-  /* ── SECTION ── */
-  section { padding: 120px 60px; }
-
-  .section-tag {
-    font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--jade-light); margin-bottom: 16px; font-weight: 400;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 300;
-    line-height: 1.15; color: var(--white);
-  }
-
-  .section-title em { font-style: italic; color: var(--sand); }
-
-  /* ── DESTINATIONS GRID ── */
-  .dest-section { background: #111; }
-  .dest-header { max-width: 600px; margin: 0 auto 70px; text-align: center; }
-  .dest-header .section-title { margin-bottom: 20px; }
-  .dest-header p { color: rgba(255,255,255,0.5); line-height: 1.8; font-weight: 200; }
-
-  .dest-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 380px 260px;
-    gap: 12px; max-width: 1300px; margin: 0 auto;
-  }
-
-  .dest-card {
-    position: relative; overflow: hidden; cursor: pointer;
-    group: true;
-  }
-
-  .dest-card:first-child {
-    grid-column: 1 / 2; grid-row: 1 / 3;
-  }
-
-  .dest-card img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
-    display: block;
-  }
-  .dest-card:hover img { transform: scale(1.07); }
-
-  .dest-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-    display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 28px;
-  }
-
-  .dest-tag {
-    font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--sand); margin-bottom: 6px;
-  }
-  .dest-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem; font-weight: 400; color: #fff;
-    line-height: 1.2;
-  }
-  .dest-card:first-child .dest-name { font-size: 2.2rem; }
-
-  .dest-card .dest-arrow {
-    position: absolute; top: 20px; right: 20px;
-    width: 36px; height: 36px; background: var(--jade);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; transform: translateY(-6px); transition: all 0.3s;
-    font-size: 1rem;
-  }
-  .dest-card:hover .dest-arrow { opacity: 1; transform: translateY(0); }
-
-  /* ── EXPERIENCES ── */
-  .exp-section { background: var(--jade-dark); }
-  .exp-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
-
-  .exp-visual { position: relative; }
-  .exp-img-main {
-    width: 100%; aspect-ratio: 4/5; object-fit: cover;
-  }
-  .exp-img-float {
-    position: absolute; bottom: -30px; right: -30px;
-    width: 55%; aspect-ratio: 3/2; object-fit: cover;
-    border: 4px solid var(--jade-dark);
-  }
-
-  .exp-text { padding-left: 20px; }
-  .exp-text .section-title { margin-bottom: 24px; }
-  .exp-text p { color: rgba(255,255,255,0.6); line-height: 1.9; font-weight: 200; margin-bottom: 40px; }
-
-  .exp-list { list-style: none; margin-bottom: 40px; }
-  .exp-list li {
-    display: flex; align-items: center; gap: 14px;
-    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
-    font-size: 0.9rem; color: rgba(255,255,255,0.7); font-weight: 300;
-  }
-  .exp-list li::before {
-    content: ''; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--sand); flex-shrink: 0;
-  }
-
-  /* ── SEASONS ── */
-  .seasons-section { background: #0d0d0d; }
-  .seasons-header { text-align: center; max-width: 500px; margin: 0 auto 60px; }
-  .seasons-header .section-title { margin-bottom: 16px; }
-  .seasons-header p { color: rgba(255,255,255,0.5); font-weight: 200; line-height: 1.8; }
-
-  .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.08); max-width: 1200px; margin: 0 auto; }
-
-  .season-card {
-    background: #0d0d0d; padding: 50px 36px;
-    position: relative; overflow: hidden;
-    transition: background 0.4s;
-  }
-  .season-card:hover { background: var(--jade-dark); }
-
-  .season-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 5rem; font-weight: 300; color: rgba(255,255,255,0.05);
-    position: absolute; top: 10px; right: 20px; line-height: 1;
-  }
-
-  .season-icon { font-size: 2rem; margin-bottom: 20px; }
-  .season-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem; font-weight: 400; margin-bottom: 8px;
-  }
-  .season-months {
-    font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--sand); margin-bottom: 16px;
-  }
-  .season-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.8; font-weight: 200; }
-
-  /* ── GALLERY STRIP ── */
-  .gallery-strip {
-    display: flex; gap: 0; overflow: hidden;
-    height: 320px;
-  }
-
-  .gallery-strip img {
-    flex: 1; object-fit: cover; filter: saturate(0.7);
-    transition: flex 0.6s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s;
-    min-width: 0;
-  }
-  .gallery-strip img:hover { flex: 3; filter: saturate(1); }
-
-  /* ── TIPS ── */
-  .tips-section { background: var(--cream); color: var(--charcoal); }
-  .tips-inner { max-width: 1100px; margin: 0 auto; }
-  .tips-inner .section-tag { color: var(--jade); }
-  .tips-inner .section-title { color: var(--charcoal); margin-bottom: 50px; }
-  .tips-inner .section-title em { color: var(--jade); }
-
-  .tips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-
-  .tip-card { border-top: 2px solid var(--jade); padding-top: 24px; }
-  .tip-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem; font-weight: 300; color: var(--sand);
-    line-height: 1; margin-bottom: 12px;
-  }
-  .tip-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 12px; color: var(--jade-dark); }
-  .tip-text { font-size: 0.85rem; color: #555; line-height: 1.8; font-weight: 300; }
-
-  /* ── CTA BANNER ── */
-  .cta-banner {
-    position: relative; padding: 160px 60px; text-align: center; overflow: hidden;
-  }
-
-  .cta-bg {
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(rgba(10,40,25,0.75), rgba(10,40,25,0.75)),
-      url('https://images.unsplash.com/photo-1469521669194-babb45599def?w=1800&q=80') center/cover;
-  }
-
-  .cta-content { position: relative; z-index: 2; }
-  .cta-content .section-title { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 20px; }
-  .cta-content p { color: rgba(255,255,255,0.65); font-weight: 200; max-width: 420px; margin: 0 auto 40px; line-height: 1.8; }
-
-  /* ── FOOTER ── */
-  footer {
-    background: #080808; padding: 60px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .footer-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: flex-end;
-    flex-wrap: wrap; gap: 40px;
-  }
-
-  .footer-brand .nav-logo { font-size: 2rem; display: block; margin-bottom: 12px; }
-  .footer-brand p { color: rgba(255,255,255,0.35); font-size: 0.8rem; font-weight: 200; max-width: 280px; line-height: 1.8; }
-
-  .footer-links { display: flex; gap: 60px; }
-  .footer-col h4 {
-    font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--sand); margin-bottom: 16px;
-  }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .footer-col a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.82rem; font-weight: 200; transition: color 0.3s; }
-  .footer-col a:hover { color: var(--white); }
-
-  .footer-bottom {
-    max-width: 1200px; margin: 40px auto 0;
-    padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06);
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-    color: rgba(255,255,255,0.25); font-size: 0.75rem; font-weight: 200;
-  }
-
-  /* ── SCROLL REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .9s ease, transform .9s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
 
-  @media (max-width: 1024px) {
-    nav { padding: 20px 30px; }
-    .nav-links { gap: 20px; }
-    section { padding: 80px 30px; }
-    .dest-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
-    .dest-card:first-child { grid-column: 1; grid-row: 1; }
-    .exp-inner { grid-template-columns: 1fr; gap: 60px; }
-    .exp-img-float { display: none; }
-    .seasons-grid { grid-template-columns: repeat(2, 1fr); }
-    .intro-strip { grid-template-columns: repeat(2, 1fr); }
-    .tips-grid { grid-template-columns: repeat(2, 1fr); }
-    .footer-links { gap: 30px; }
-  }
+  .mist-layer { position: fixed; top: 0; left: 0; right: 0; height: 100vh; pointer-events: none; z-index: 50; background: linear-gradient(180deg, rgba(200,215,225,.18) 0%, rgba(200,215,225,.08) 40%, transparent 100%); transition: opacity .8s ease; }
 
-  @media (max-width: 600px) {
-    nav { padding: 18px 20px; }
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
     .nav-links { display: none; }
-    section { padding: 60px 20px; }
-    .dest-grid { grid-template-columns: 1fr; }
-    .seasons-grid { grid-template-columns: 1fr; }
-    .tips-grid { grid-template-columns: 1fr; }
-    .footer-links { flex-direction: column; gap: 20px; }
-    .footer-inner { flex-direction: column; }
-    .gallery-strip { height: 200px; }
+    .section-inner { padding: 80px 24px; }
+    .hero-content { padding: 0 24px 60px; }
+    .motivation-layout, .nature-layout { grid-template-columns: 1fr; gap: 40px; }
+    .program-item { grid-template-columns: 40px 1fr; }
+    .program-tag { display: none; }
+    .hero-meta { gap: 24px; flex-wrap: wrap; }
+    .footer-inner { padding: 60px 24px 40px; }
+    .footer-top { flex-direction: column; gap: 40px; }
+    .footer-info { text-align: left; }
+    .scroll-indicator { right: 24px; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav id="nav">
-  <a href="#" class="nav-logo">100% <span>Pure</span> New Zealand</a>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="mist-layer" id="mistLayer"></div>
+
+<nav>
+  <div class="nav-logo">두물머리 물안개 축제</div>
   <ul class="nav-links">
-    <li><a href="#destinations">여행지</a></li>
-    <li><a href="#experiences">체험</a></li>
-    <li><a href="#seasons">시즌</a></li>
-    <li><a href="#tips">여행정보</a></li>
-    <li><a href="#contact" class="btn btn-primary" style="padding:10px 24px;">예약하기</a></li>
+    <li><a href="#motivation">About</a></li>
+    <li><a href="#science">Science</a></li>
+    <li><a href="#nature">Nature</a></li>
+    <li><a href="#program">Program</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
+<section id="hero">
   <div class="hero-bg"></div>
+  <div class="hero-mist-bottom"></div>
+  <div class="hero-mist-vignette"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Welcome to New Zealand</p>
+    <p class="hero-eyebrow">Yangpyeong · Gyeonggi · 2025</p>
     <h1 class="hero-title">
-      순수한 자연,<br>
-      <em>끝없는 감동</em>
+      <span class="line1">Waking in</span>
+      <span class="line2">the Mist</span>
     </h1>
-    <p class="hero-sub">지구 끝에서 만나는 비길 데 없는 아름다움 — 피오르드에서 화산, 그리고 별빛 가득한 하늘까지.</p>
-    <div class="hero-cta">
-      <a href="#destinations" class="btn btn-primary">여행지 탐색</a>
-      <a href="#experiences" class="btn btn-outline">체험 보기</a>
+    <p class="hero-title-ko">두물머리 물안개 축제</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">일시</span>
+        <span class="hero-meta-value">2025. 10. 04 — 06</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">장소</span>
+        <span class="hero-meta-value">경기 양평 두물머리</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">최적 관람</span>
+        <span class="hero-meta-value">새벽 05:30 — 07:30</span>
+      </div>
     </div>
   </div>
-  <div class="hero-scroll">
+  <div class="scroll-indicator">
     <div class="scroll-line"></div>
-    <span>Scroll</span>
+    <span class="scroll-text">Scroll</span>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="intro-strip">
-  <div class="stat-item reveal">
-    <div class="stat-num">268k</div>
-    <div class="stat-label">㎢ 국토면적</div>
-  </div>
-  <div class="stat-item reveal reveal-delay-1">
-    <div class="stat-num">14</div>
-    <div class="stat-label">국립공원</div>
-  </div>
-  <div class="stat-item reveal reveal-delay-2">
-    <div class="stat-num">9</div>
-    <div class="stat-label">세계문화유산</div>
-  </div>
-  <div class="stat-item reveal reveal-delay-3">
-    <div class="stat-num">∞</div>
-    <div class="stat-label">잊지 못할 순간</div>
-  </div>
-</div>
-
-<!-- DESTINATIONS -->
-<section class="dest-section" id="destinations">
-  <div class="dest-header reveal">
-    <p class="section-tag">Must-See Destinations</p>
-    <h2 class="section-title">꼭 가봐야 할<br><em>여행지</em></h2>
-    <p>북섬의 화산 지형부터 남섬의 빙하와 피오르드까지, 뉴질랜드는 다양한 경이로움을 품고 있습니다.</p>
-  </div>
-  <div class="dest-grid">
-    <div class="dest-card reveal">
-      <img src="https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=900&q=80" alt="밀퍼드 사운드">
-      <div class="dest-overlay">
-        <div class="dest-tag">남섬 • 피오르드랜드</div>
-        <div class="dest-name">밀퍼드 사운드</div>
+<section id="motivation">
+  <div class="section-inner">
+    <div class="section-label reveal">01 — Motivation</div>
+    <div class="motivation-layout">
+      <div class="reveal">
+        <div class="motivation-number">∅</div>
+        <div class="motivation-stats">
+          <div>
+            <div class="stat-row"><span class="stat-num">147</span><span class="stat-unit">일 / year</span></div>
+            <p class="stat-desc">연평균 안개 발생일수<br>전국 최고 수준</p>
+          </div>
+          <div>
+            <div class="stat-row"><span class="stat-num">400</span><span class="stat-unit">년</span></div>
+            <p class="stat-desc">느티나무 수령<br>두 강이 만나는 자리의 증인</p>
+          </div>
+          <div>
+            <div class="stat-row"><span class="stat-num">2</span><span class="stat-unit">강의 합류</span></div>
+            <p class="stat-desc">남한강 × 북한강<br>물안개가 가장 짙은 이유</p>
+          </div>
+        </div>
       </div>
-      <div class="dest-arrow">→</div>
-    </div>
-
-    <div class="dest-card reveal reveal-delay-1">
-      <img src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=700&q=80" alt="로토루아">
-      <div class="dest-overlay">
-        <div class="dest-tag">북섬 • 베이 오브 플렌티</div>
-        <div class="dest-name">로토루아</div>
-      </div>
-      <div class="dest-arrow">→</div>
-    </div>
-
-    <div class="dest-card reveal reveal-delay-2">
-      <img src="https://images.unsplash.com/photo-1469521669194-babb45599def?w=700&q=80" alt="퀸스타운">
-      <div class="dest-overlay">
-        <div class="dest-tag">남섬 • 오타고</div>
-        <div class="dest-name">퀸스타운</div>
-      </div>
-      <div class="dest-arrow">→</div>
-    </div>
-
-    <div class="dest-card reveal reveal-delay-1">
-      <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=700&q=80" alt="통가리로">
-      <div class="dest-overlay">
-        <div class="dest-tag">북섬 • 중심부</div>
-        <div class="dest-name">통가리로 국립공원</div>
-      </div>
-      <div class="dest-arrow">→</div>
-    </div>
-
-    <div class="dest-card reveal reveal-delay-2">
-      <img src="https://images.unsplash.com/photo-1484533082696-6bfe8e3b2553?w=700&q=80" alt="호키티카">
-      <div class="dest-overlay">
-        <div class="dest-tag">남섬 • 웨스트코스트</div>
-        <div class="dest-name">프란츠 요셉 빙하</div>
-      </div>
-      <div class="dest-arrow">→</div>
-    </div>
-  </div>
-</section>
-
-<!-- EXPERIENCES -->
-<section class="exp-section" id="experiences">
-  <div class="exp-inner">
-    <div class="exp-visual reveal">
-      <img class="exp-img-main" src="https://images.unsplash.com/photo-1571155236710-d4e1c47a1f64?w=700&q=80" alt="체험">
-      <img class="exp-img-float" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=500&q=80" alt="마오리 문화">
-    </div>
-    <div class="exp-text reveal reveal-delay-1">
-      <p class="section-tag">Unique Experiences</p>
-      <h2 class="section-title">잊을 수 없는<br><em>특별한 체험</em></h2>
-      <p>뉴질랜드는 단순히 보는 여행이 아닙니다. 번지점프, 스카이다이빙, 마오리 문화 체험, 호빗마을 방문 — 모든 순간이 이야기가 됩니다.</p>
-      <ul class="exp-list">
-        <li>퀸스타운 번지점프 & 스카이다이빙</li>
-        <li>마오리 전통 문화 & 항기 체험</li>
-        <li>호빗마을 (마타마타) 투어</li>
-        <li>밀퍼드 사운드 크루즈</li>
-        <li>와이토모 반딧불이 동굴 탐험</li>
-        <li>와카티푸 호수 제트보트</li>
-      </ul>
-      <a href="#" class="btn btn-primary">모든 체험 보기</a>
-    </div>
-  </div>
-</section>
-
-<!-- GALLERY STRIP -->
-<div class="gallery-strip">
-  <img src="https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=600&q=80" alt="피오르드">
-  <img src="https://images.unsplash.com/photo-1469521669194-babb45599def?w=600&q=80" alt="퀸스타운">
-  <img src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=600&q=80" alt="로토루아">
-  <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&q=80" alt="통가리로">
-  <img src="https://images.unsplash.com/photo-1484533082696-6bfe8e3b2553?w=600&q=80" alt="빙하">
-  <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=600&q=80" alt="마오리">
-</div>
-
-<!-- SEASONS -->
-<section class="seasons-section" id="seasons">
-  <div class="seasons-header reveal">
-    <p class="section-tag">Best Time to Visit</p>
-    <h2 class="section-title">언제 가도<br><em>완벽한 뉴질랜드</em></h2>
-    <p>계절마다 다른 매력을 품은 뉴질랜드, 당신의 여행 스타일에 맞는 시즌을 골라보세요.</p>
-  </div>
-  <div class="seasons-grid">
-    <div class="season-card reveal">
-      <div class="season-num">01</div>
-      <div class="season-icon">🌸</div>
-      <div class="season-title">봄</div>
-      <div class="season-months">9월 — 11월</div>
-      <p class="season-desc">꽃이 만발하는 계절. 트레킹과 야외활동 최적기. 관광객이 적어 여유롭게 즐길 수 있습니다.</p>
-    </div>
-    <div class="season-card reveal reveal-delay-1">
-      <div class="season-num">02</div>
-      <div class="season-icon">☀️</div>
-      <div class="season-title">여름</div>
-      <div class="season-months">12월 — 2월</div>
-      <p class="season-desc">해변과 야외 액티비티의 절정. 밀퍼드 트랙 등 인기 트레일은 사전 예약 필수입니다.</p>
-    </div>
-    <div class="season-card reveal reveal-delay-2">
-      <div class="season-num">03</div>
-      <div class="season-icon">🍂</div>
-      <div class="season-title">가을</div>
-      <div class="season-months">3월 — 5월</div>
-      <p class="season-desc">황금빛 단풍과 맑은 하늘. 와인 수확 시즌으로 말보로 와이너리 방문 추천.</p>
-    </div>
-    <div class="season-card reveal reveal-delay-3">
-      <div class="season-num">04</div>
-      <div class="season-icon">❄️</div>
-      <div class="season-title">겨울</div>
-      <div class="season-months">6월 — 8월</div>
-      <p class="season-desc">퀸스타운 스키 시즌! 서던 알프스의 설경은 압도적. 오로라 관측 기회도 있습니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- TIPS -->
-<section class="tips-section" id="tips">
-  <div class="tips-inner">
-    <p class="section-tag reveal">Travel Essentials</p>
-    <h2 class="section-title reveal" style="margin-bottom:16px">알아두면 좋은<br><em>여행 팁</em></h2>
-    <div class="tips-grid" style="margin-top:50px">
-      <div class="tip-card reveal">
-        <div class="tip-num">01</div>
-        <h3 class="tip-title">입국 비자</h3>
-        <p class="tip-text">한국인은 최대 90일 무비자 입국 가능 (NZeTA 필요). 출발 전 온라인으로 신청하세요. 수수료 NZ$23 (모바일 앱 기준).</p>
-      </div>
-      <div class="tip-card reveal reveal-delay-1">
-        <div class="tip-num">02</div>
-        <h3 class="tip-title">교통 & 렌터카</h3>
-        <p class="tip-text">대중교통이 제한적이므로 렌터카 추천. 좌측통행 국가입니다. 국제운전면허증 + 한국 면허증 지참 필수.</p>
-      </div>
-      <div class="tip-card reveal reveal-delay-2">
-        <div class="tip-num">03</div>
-        <h3 class="tip-title">통화 & 결제</h3>
-        <p class="tip-text">뉴질랜드 달러(NZD) 사용. 카드 결제가 보편적이며, 현금은 소규모 지역에서 유용합니다.</p>
-      </div>
-      <div class="tip-card reveal reveal-delay-1">
-        <div class="tip-num">04</div>
-        <h3 class="tip-title">생물 검역</h3>
-        <p class="tip-text">엄격한 생물 검역 국가. 과일, 육류, 유제품 반입 금지. 신고 안 할 경우 최대 NZ$400 벌금.</p>
-      </div>
-      <div class="tip-card reveal reveal-delay-2">
-        <div class="tip-num">05</div>
-        <h3 class="tip-title">자외선 주의</h3>
-        <p class="tip-text">오존층이 얇아 자외선이 매우 강합니다. SPF 50+ 선크림 필수, 모자와 선글라스도 챙기세요.</p>
-      </div>
-      <div class="tip-card reveal reveal-delay-3">
-        <div class="tip-num">06</div>
-        <h3 class="tip-title">액티비티 예약</h3>
-        <p class="tip-text">밀퍼드 트랙, 통가리로 알파인 크로싱 등 인기 트레일은 성수기 수개월 전 예약이 필수입니다.</p>
+      <div class="reveal">
+        <h2 class="motivation-heading">소음을 걷어내면,<br>안개가 보인다.</h2>
+        <p class="motivation-body">두물머리는 남한강과 북한강이 만나는 곳입니다. 이른 새벽, 두 강의 기온 차이가 수면 위로 피어오르는 물안개를 만들어냅니다. 이것은 자연이 매일 아침 연출하는 짧고 완전한 퍼포먼스입니다.</p>
+        <p class="motivation-body" style="margin-top:24px;">이 축제는 '볼거리'를 쌓는 대신 '비움'을 권합니다. 군더더기를 덜어낸 프로그램, 정적 속에서 피어오르는 안개, 그리고 400년을 버텨온 느티나무 한 그루가 전부입니다.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section id="contact" class="cta-banner">
-  <div class="cta-bg"></div>
-  <div class="cta-content reveal">
-    <p class="section-tag" style="color:var(--sand)">Start Your Journey</p>
-    <h2 class="section-title">지금 바로<br><em>뉴질랜드로</em></h2>
-    <p>꿈꿔왔던 여행을 현실로 만들어 드립니다. 맞춤형 뉴질랜드 여행 계획을 지금 시작하세요.</p>
-    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-      <a href="#" class="btn btn-primary">여행 계획 시작</a>
-      <a href="#" class="btn btn-outline">상담 문의</a>
+<section id="science">
+  <div class="section-inner">
+    <div class="section-label reveal">02 — Science of Mist</div>
+    <h2 class="science-heading reveal">안개는 몇 시에<br>가장 아름다운가.</h2>
+    <div class="chart-container reveal">
+      <svg class="chart-svg" viewBox="0 0 900 200" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="mistGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7FA3B8" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#7FA3B8" stop-opacity="0.03"/>
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="50" x2="900" y2="50" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <line x1="0" y1="100" x2="900" y2="100" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <path d="M0,190 C60,188 90,180 120,165 C150,150 165,130 190,105 C210,85 225,62 250,48 C270,36 290,32 310,30 C330,28 345,28 360,30 C380,33 395,42 415,55 C440,72 455,90 480,112 C505,134 525,152 560,165 C595,176 640,182 700,186 C750,189 800,190 900,190 Z" fill="url(#mistGrad)"/>
+        <path d="M0,190 C60,188 90,180 120,165 C150,150 165,130 190,105 C210,85 225,62 250,48 C270,36 290,32 310,30 C330,28 345,28 360,30 C380,33 395,42 415,55 C440,72 455,90 480,112 C505,134 525,152 560,165 C595,176 640,182 700,186 C750,189 800,190 900,190" fill="none" stroke="#7FA3B8" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="310" cy="30" r="4" fill="#7FA3B8"/>
+        <line x1="310" y1="30" x2="310" y2="190" stroke="#7FA3B8" stroke-width="1" stroke-dasharray="4,4" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="chart-labels reveal">
+      <span class="chart-label">00:00</span>
+      <span class="chart-label">02:00</span>
+      <span class="chart-label">04:00</span>
+      <span class="chart-label peak">06:00 ★</span>
+      <span class="chart-label">08:00</span>
+      <span class="chart-label">10:00</span>
+      <span class="chart-label">12:00</span>
+    </div>
+    <div class="chart-legend reveal">
+      <div class="legend-item"><span class="legend-value">05:30</span><span class="legend-label">안개 시작 시각</span></div>
+      <div class="legend-item"><span class="legend-value">06:10</span><span class="legend-label">밀도 최고점 (피크)</span></div>
+      <div class="legend-item"><span class="legend-value">07:40</span><span class="legend-label">일출과 함께 소산</span></div>
+      <div class="legend-item"><span class="legend-value">±8°C</span><span class="legend-label">수온·기온 최적 차이</span></div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<section id="nature">
+  <div class="section-inner">
+    <div class="section-label reveal">03 — Nature Bio</div>
+    <div class="nature-layout">
+      <div>
+        <h2 class="nature-heading reveal">400년을 여기 서서,<br>두 강을 지켜보았다.</h2>
+        <table class="nature-table reveal">
+          <tr><td>학명</td><td>Zelkova serrata<br><span style="font-size:11px;color:var(--mist-4)">느티나무</span></td></tr>
+          <tr><td>수령</td><td>약 400년<br><span style="font-size:11px;color:var(--mist-4)">조선 중기 식재 추정</span></td></tr>
+          <tr><td>수고 / 흉고</td><td>수고 17m · 흉고 직경 4.5m<br><span style="font-size:11px;color:var(--mist-4)">경기도 보호수 지정</span></td></tr>
+          <tr><td>위치</td><td>양평군 양서면 두물머리길 145<br><span style="font-size:11px;color:var(--mist-4)">남·북한강 합류 지점 인접</span></td></tr>
+          <tr><td>생태 특성</td><td>강변 다습 환경 적응종. 봄의 연두, 가을의 단풍, 겨울의 수형이 사계절 모두 아름다움.</td></tr>
+        </table>
+      </div>
+      <div class="nature-visual reveal">
+        <svg class="tree-illustration" viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="305" x2="200" y2="305" stroke="#C8CDD2" stroke-width="1"/>
+          <path d="M100,305 C98,280 96,255 94,230 C92,205 90,185 95,165 C98,150 100,140 100,140" stroke="#9DAAB5" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M100,200 C85,185 70,175 55,165" stroke="#9DAAB5" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M100,180 C115,165 130,158 148,150" stroke="#9DAAB5" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M100,160 C90,145 82,135 72,125" stroke="#9DAAB5" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M100,155 C112,140 122,132 134,122" stroke="#9DAAB5" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M72,125 C62,115 55,108 46,100" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M72,125 C78,112 82,104 84,94" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M134,122 C144,112 150,104 156,96" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M134,122 C130,108 128,100 126,90" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M55,165 C44,158 38,152 30,144" stroke="#9DAAB5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M148,150 C158,143 165,136 172,128" stroke="#9DAAB5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="60" cy="88" r="28" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.6"/>
+          <circle cx="100" cy="72" r="36" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.4"/>
+          <circle cx="145" cy="85" r="26" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.6"/>
+          <circle cx="30" cy="130" r="18" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.5"/>
+          <circle cx="170" cy="115" r="18" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.5"/>
+        </svg>
+        <p class="tree-caption">Zelkova serrata · 수령 400년<br>경기도 보호수</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="program">
+  <div class="section-inner">
+    <div class="section-label reveal">04 — Program</div>
+    <h2 class="program-heading reveal">채우는 대신,<br>비우는 프로그램.</h2>
+    <div class="program-list">
+      <div class="program-item">
+        <span class="program-index">01</span>
+        <div>
+          <p class="program-name">Silent Walk</p>
+          <p class="program-name-ko">사일런트 워크 — 헤드셋 새벽 산책</p>
+          <p class="program-desc">헤드셋을 착용하고 아무 말도 하지 않습니다. 가이드의 목소리 대신, 두물머리의 새소리와 물소리, 그리고 안개 속을 걷는 발소리만이 귀에 들어옵니다. 1시간, 완전한 침묵 속을 걷는 경험.</p>
+        </div>
+        <div>
+          <p class="program-tag">05:30 — 07:00</p>
+          <p class="program-tag" style="margin-top:8px">선착순 20인</p>
+        </div>
+      </div>
+      <div class="program-item">
+        <span class="program-index">02</span>
+        <div>
+          <p class="program-name">Wish Boat</p>
+          <p class="program-name-ko">소원 돛단배 — 수면 위의 소원</p>
+          <p class="program-desc">한지에 소원을 써서 작은 돛단배에 실어 강으로 보냅니다. 안개 위로 천천히 멀어지는 배를 바라보는 것. 거창한 의식 없이, 그저 흘러 보내는 것만으로 충분합니다.</p>
+        </div>
+        <div>
+          <p class="program-tag">06:00 — 08:00</p>
+          <p class="program-tag" style="margin-top:8px">상시 참여</p>
+        </div>
+      </div>
+      <div class="program-item">
+        <span class="program-index">03</span>
+        <div>
+          <p class="program-name">Dawn Table</p>
+          <p class="program-name-ko">새벽 밥상 — 안개 속의 아침식사</p>
+          <p class="program-desc">안개가 걷히는 시간, 느티나무 아래에 밥상을 차립니다. 양평 지역 농산물로 차린 단촐한 아침 한 상. 말이 없어도 괜찮습니다. 그저 함께 먹는 것만으로 충분합니다.</p>
+        </div>
+        <div>
+          <p class="program-tag">07:00 — 09:00</p>
+          <p class="program-tag" style="margin-top:8px">사전 예약</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="#" class="nav-logo">100% <span>Pure</span> NZ</a>
-      <p>뉴질랜드의 순수한 자연과 문화를 세계와 나누는 공식 관광 가이드입니다.</p>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <h4>여행지</h4>
-        <ul>
-          <li><a href="#">북섬</a></li>
-          <li><a href="#">남섬</a></li>
-          <li><a href="#">스튜어트 섬</a></li>
-          <li><a href="#">와이헤케 섬</a></li>
-        </ul>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Waking in the Mist</div>
+        <div class="footer-brand-ko">두물머리 물안개 축제 · 2025</div>
       </div>
-      <div class="footer-col">
-        <h4>체험</h4>
-        <ul>
-          <li><a href="#">어드벤처</a></li>
-          <li><a href="#">마오리 문화</a></li>
-          <li><a href="#">자연 트레킹</a></li>
-          <li><a href="#">와인 & 음식</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>여행 정보</h4>
-        <ul>
-          <li><a href="#">비자 안내</a></li>
-          <li><a href="#">교통 정보</a></li>
-          <li><a href="#">숙박 추천</a></li>
-          <li><a href="#">자주 묻는 질문</a></li>
-        </ul>
+      <div class="footer-info">
+        <div class="footer-info-row"><strong>주관</strong>경기 양평군청 문화관광과</div>
+        <div class="footer-info-row"><strong>기상 데이터 출처</strong>기상청 기후 통계 분석</div>
+        <div class="footer-info-row"><strong>문의</strong>031-770-2114</div>
       </div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025 뉴질랜드 관광청 | Tourism New Zealand</span>
-    <span>개인정보처리방침 · 이용약관 · 사이트맵</span>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 양평군청. All rights reserved.</p>
+      <div class="footer-sources">
+        <span class="footer-source">양평군청</span>
+        <span class="footer-source">기상청</span>
+        <span class="footer-source">문화재청</span>
+      </div>
+    </div>
   </div>
 </footer>
 
 <script>
-  // Nav scroll effect
-  const nav = document.getElementById('nav');
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const mistLayer = document.getElementById('mistLayer');
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 80);
+    const fade = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.6));
+    mistLayer.style.opacity = fade;
   });
 
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  reveals.forEach(el => observer.observe(el));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal, .program-item').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
