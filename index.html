@@ -1,405 +1,289 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>두물머리 물안개 축제 — Waking in the Mist</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Noto+Sans+KR:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --white: #FFFFFF;
-    --mist-1: #F4F4F2;
-    --mist-2: #E2E4E6;
-    --mist-3: #C8CDD2;
-    --mist-4: #9DAAB5;
-    --navy-light: #4A6378;
-    --navy: #1E3448;
-    --navy-deep: #0D1E2D;
-    --accent: #7FA3B8;
-    --serif: 'Cormorant Garamond', 'Noto Serif KR', serif;
-    --sans: 'Noto Sans KR', sans-serif;
-  }
-  html { scroll-behavior: smooth; }
-  body { font-family: var(--sans); background: var(--white); color: var(--navy-deep); overflow-x: hidden; cursor: none; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENSORY ARCHIVE: THE INTERACTIVE FOG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #ffffff; --text: #111; --accent: #c5a47e; --serif: 'Cormorant Garamond', serif; --sans: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; scroll-behavior: smooth; }
 
-  .cursor { position: fixed; width: 6px; height: 6px; background: var(--navy); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
-  .cursor-ring { position: fixed; width: 28px; height: 28px; border: 1px solid rgba(30,52,72,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .3s, height .3s; }
+        /* 커서 */
+        .cursor { width: 8px; height: 8px; background: #000; border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; }
+        .cursor-follower { width: 30px; height: 30px; border: 1px solid rgba(0,0,0,0.2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; }
+        .hidden { display: none !important; }
 
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 28px 56px; }
-  .nav-logo { font-family: var(--serif); font-size: 13px; letter-spacing: .25em; color: var(--white); font-weight: 300; text-transform: uppercase; opacity: .85; }
-  .nav-links { display: flex; gap: 40px; list-style: none; }
-  .nav-links a { font-size: 11px; letter-spacing: .2em; color: var(--white); text-decoration: none; font-weight: 300; opacity: .7; text-transform: uppercase; transition: opacity .3s; }
-  .nav-links a:hover { opacity: 1; }
+        /* [1. INTRO: 강화된 안개] */
+        #intro { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-left: 10%; background: #ffffff; position: relative; overflow: hidden; }
+        
+        /* [수정] 블러를 낮추고 불투명도를 높여 안개를 더 선명하게 만듦 */
+        #fog-canvas { 
+            position: absolute; 
+            inset: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 1; 
+            pointer-events: none; 
+            filter: blur(25px); /* 블러를 줄여 입자감을 살림 */
+            opacity: 0.9; /* 안개를 더 진하게 */
+        }
+        
+        .main-title { font-family: var(--serif); font-size: 10vw; line-height: 0.85; font-weight: 300; text-transform: uppercase; z-index: 2; position: relative; }
+        .start-trigger { margin-top: 50px; font-family: var(--serif); font-size: 1.8rem; font-style: italic; text-decoration: underline; color: #555; cursor: pointer; transition: 0.4s; z-index: 2; position: relative; }
 
-  #hero { position: relative; width: 100%; height: 100vh; overflow: hidden; display: flex; align-items: flex-end; background: var(--navy-deep); }
-  .hero-bg { position: absolute; inset: 0; background-image: url('IE001754667_STD.JPG'); background-size: cover; background-position: center 30%; filter: brightness(.75) saturate(.8); transform: scale(1.06); animation: heroZoom 18s ease-out forwards; }
-  .hero-mist-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to top, rgba(13,30,45,.72) 0%, transparent 100%); pointer-events: none; }
-  .hero-mist-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(13,30,45,.35) 100%); pointer-events: none; }
+        /* [2. TEST] */
+        #test { height: 100vh; display: flex; align-items: center; justify-content: center; background: #fafafa; padding: 0 10%; position: relative; z-index: 5; }
+        .test-content { width: 100%; max-width: 800px; text-align: center; }
+        .q-tag { color: var(--accent); font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 20px; }
+        .q-text { font-family: var(--serif); font-size: 3.2rem; line-height: 1.2; margin-bottom: 60px; font-style: italic; font-weight: 300; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .opt-btn { padding: 25px; background: transparent; border: 1px solid #ddd; font-size: 1rem; transition: 0.3s; cursor: pointer; color: #666; }
+        .opt-btn:hover { border-color: #111; color: #111; background: #fff; transform: translateY(-3px); }
 
-  @keyframes heroZoom { from { transform: scale(1.06); } to { transform: scale(1.00); } }
+        /* [3. LOADING] */
+        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .load-line { width: 200px; height: 1px; background: #eee; overflow: hidden; position: relative; margin-top: 20px; }
+        .load-line::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: #111; animation: l 2s infinite; }
+        @keyframes l { to { left: 100%; } }
 
-  .hero-content { position: relative; z-index: 2; padding: 0 80px 80px; width: 100%; display: flex; flex-direction: column; }
-  .hero-eyebrow { font-size: 10.5px; letter-spacing: .35em; color: var(--mist-3); text-transform: uppercase; font-weight: 300; margin-bottom: 20px; opacity: 0; animation: fadeUp 1.2s ease .4s forwards; }
-  .hero-title { font-family: var(--serif); font-weight: 300; font-style: italic; color: var(--white); line-height: 1.05; margin-bottom: 32px; opacity: 0; animation: fadeUp 1.4s ease .7s forwards; }
-  .hero-title .line1 { font-size: clamp(52px,7vw,96px); display: block; }
-  .hero-title .line2 { font-size: clamp(52px,7vw,96px); display: block; padding-left: 3vw; }
-  .hero-title-ko { font-family: 'Noto Serif KR',serif; font-size: 14px; letter-spacing: .3em; color: var(--mist-3); font-weight: 300; margin-bottom: 48px; opacity: 0; animation: fadeUp 1.4s ease 1s forwards; }
-  .hero-meta { display: flex; gap: 56px; opacity: 0; animation: fadeUp 1.2s ease 1.3s forwards; }
-  .hero-meta-item { display: flex; flex-direction: column; gap: 6px; }
-  .hero-meta-label { font-size: 9px; letter-spacing: .3em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; }
-  .hero-meta-value { font-family: var(--serif); font-size: 15px; color: var(--white); font-weight: 300; letter-spacing: .05em; }
+        /* [4. RESULT PAGE] */
+        #result-page { display: none; background: #ffffff; padding-bottom: 150px; }
+        .res-header { height: 100vh; display: flex; align-items: center; padding: 0 8%; position: relative; }
+        .res-hero-img { width: 40%; height: 70vh; background: #eee; overflow: hidden; }
+        .res-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .res-info-box { width: 50%; padding-left: 8%; }
+        .res-title { font-family: var(--serif); font-size: 8rem; line-height: 1; border-bottom: 10px solid #111; display: inline-block; margin-bottom: 30px; text-transform: uppercase; }
+        
+        .spec-container { padding: 0 8%; margin-top: -50px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px; }
+        .spec-section { border-top: 1px solid #111; padding-top: 30px; }
+        .spec-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; display: block; }
+        
+        .perfume-list { list-style: none; }
+        .perfume-list li { font-family: var(--serif); font-size: 2.2rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        .fact-box { background: #f9f9f9; padding: 40px; position: relative; }
+        .fact-text { font-family: var(--serif); font-size: 1.5rem; line-height: 1.6; font-style: italic; color: #333; }
+        .fact-icon { font-size: 0.7rem; color: var(--accent); margin-bottom: 15px; display: block; letter-spacing: 2px; }
 
-  .scroll-indicator { position: absolute; bottom: 40px; right: 56px; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; animation: fadeIn 1.5s ease 2s forwards; }
-  .scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,.5)); animation: scrollPulse 2s ease-in-out infinite; }
-  .scroll-text { font-size: 9px; letter-spacing: .3em; color: rgba(255,255,255,.5); text-transform: uppercase; writing-mode: vertical-rl; }
+        /* [5. ARCHIVE] */
+        #archive-browser { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 3000; display: none; flex-direction: column; padding: 5% 8%; backdrop-filter: blur(10px); }
+        .archive-track { display: flex; gap: 30px; overflow-x: auto; padding: 40px 0; scrollbar-width: none; }
+        .archive-card { min-width: 250px; height: 350px; border: 1px solid #eee; cursor: pointer; text-align: center; flex-shrink: 0; transition: 0.4s; background: #fff; }
+        .archive-card:hover { border-color: #111; transform: translateY(-10px); }
+        .archive-card img { width: 100%; height: 80%; object-fit: cover; }
+        .archive-card h4 { font-family: var(--serif); font-size: 1.2rem; margin-top: 15px; text-transform: uppercase; }
 
-  @keyframes scrollPulse { 0%,100%{opacity:.3} 50%{opacity:1} }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-  section { position: relative; }
-  .section-inner { max-width: 1200px; margin: 0 auto; padding: 120px 80px; }
-  .section-label { font-size: 9px; letter-spacing: .4em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; margin-bottom: 64px; display: flex; align-items: center; gap: 20px; }
-  .section-label::after { content:''; display: block; width: 40px; height: 1px; background: var(--mist-3); }
-
-  #motivation { background: var(--white); }
-  .motivation-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 0 80px; align-items: start; }
-  .motivation-number { font-family: var(--serif); font-size: 120px; color: var(--mist-2); line-height: 1; font-weight: 300; margin-bottom: -20px; }
-  .motivation-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,46px); font-weight: 300; line-height: 1.3; color: var(--navy); margin-bottom: 40px; font-style: italic; }
-  .motivation-body { font-size: 14px; line-height: 2; color: var(--navy-light); font-weight: 300; max-width: 480px; }
-  .motivation-stats { margin-top: 64px; display: flex; flex-direction: column; gap: 32px; border-top: 1px solid var(--mist-2); padding-top: 48px; }
-  .stat-row { display: flex; align-items: baseline; gap: 16px; }
-  .stat-num { font-family: var(--serif); font-size: 40px; font-weight: 300; color: var(--navy); line-height: 1; }
-  .stat-unit { font-size: 10px; letter-spacing: .2em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; }
-  .stat-desc { font-size: 11px; color: var(--navy-light); font-weight: 300; line-height: 1.6; margin-top: 4px; }
-
-  #science { background: var(--navy-deep); color: var(--white); }
-  #science .section-label { color: rgba(255,255,255,.3); }
-  #science .section-label::after { background: rgba(255,255,255,.15); }
-  .science-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,44px); font-weight: 300; font-style: italic; color: var(--white); margin-bottom: 72px; max-width: 480px; line-height: 1.3; }
-  .chart-container { position: relative; width: 100%; height: 220px; margin-bottom: 24px; }
-  .chart-svg { width: 100%; height: 100%; overflow: visible; }
-  .chart-labels { display: flex; justify-content: space-between; margin-top: 12px; }
-  .chart-label { font-size: 10px; color: rgba(255,255,255,.3); letter-spacing: .15em; font-weight: 300; }
-  .chart-label.peak { color: var(--accent); }
-  .chart-legend { margin-top: 40px; display: flex; gap: 40px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.08); padding-top: 32px; }
-  .legend-item { display: flex; flex-direction: column; gap: 8px; }
-  .legend-value { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--white); }
-  .legend-label { font-size: 9px; letter-spacing: .25em; color: rgba(255,255,255,.35); text-transform: uppercase; font-weight: 300; }
-
-  #nature { background: var(--mist-1); }
-  .nature-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 80px; align-items: start; }
-  .nature-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,44px); font-weight: 300; font-style: italic; color: var(--navy); margin-bottom: 48px; line-height: 1.3; }
-  .nature-table { width: 100%; border-collapse: collapse; }
-  .nature-table tr { border-bottom: 1px solid var(--mist-2); }
-  .nature-table td { padding: 20px 0; font-size: 13px; font-weight: 300; line-height: 1.7; vertical-align: top; }
-  .nature-table td:first-child { font-size: 9.5px; letter-spacing: .25em; color: var(--mist-4); text-transform: uppercase; width: 130px; padding-right: 24px; padding-top: 22px; }
-  .nature-table td:last-child { color: var(--navy); }
-  .nature-visual { display: flex; flex-direction: column; align-items: center; }
-  .tree-illustration { width: 100%; max-width: 260px; }
-  .tree-caption { font-size: 10px; letter-spacing: .2em; color: var(--mist-4); text-align: center; margin-top: 20px; text-transform: uppercase; font-weight: 300; line-height: 1.8; }
-
-  #program { background: var(--white); }
-  .program-heading { font-family: var(--serif); font-size: clamp(28px,3.5vw,44px); font-weight: 300; font-style: italic; color: var(--navy); margin-bottom: 80px; line-height: 1.3; }
-  .program-list { display: flex; flex-direction: column; }
-  .program-item { display: grid; grid-template-columns: 80px 1fr auto; align-items: start; gap: 40px; padding: 48px 0; border-top: 1px solid var(--mist-2); opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
-  .program-item.visible { opacity: 1; transform: translateY(0); }
-  .program-item:last-child { border-bottom: 1px solid var(--mist-2); }
-  .program-index { font-family: var(--serif); font-size: 11px; color: var(--mist-3); letter-spacing: .1em; margin-top: 4px; font-weight: 300; }
-  .program-name { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--navy); margin-bottom: 12px; font-style: italic; }
-  .program-name-ko { font-size: 10.5px; letter-spacing: .25em; color: var(--mist-4); text-transform: uppercase; font-weight: 300; margin-bottom: 20px; }
-  .program-desc { font-size: 13px; line-height: 2; color: var(--navy-light); font-weight: 300; max-width: 520px; }
-  .program-tag { font-size: 9px; letter-spacing: .25em; color: var(--accent); text-transform: uppercase; font-weight: 300; margin-top: 6px; white-space: nowrap; }
-
-  footer { background: var(--navy-deep); color: var(--white); }
-  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 80px 80px 56px; }
-  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 64px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.07); }
-  .footer-brand { font-family: var(--serif); font-size: 28px; font-weight: 300; font-style: italic; color: var(--white); line-height: 1.3; }
-  .footer-brand-ko { font-size: 10px; letter-spacing: .35em; color: rgba(255,255,255,.3); margin-top: 10px; font-weight: 300; }
-  .footer-info { text-align: right; display: flex; flex-direction: column; gap: 16px; }
-  .footer-info-row { font-size: 11px; color: rgba(255,255,255,.3); font-weight: 300; line-height: 1.8; }
-  .footer-info-row strong { color: rgba(255,255,255,.55); font-weight: 300; letter-spacing: .2em; text-transform: uppercase; font-size: 9px; display: block; margin-bottom: 2px; }
-  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
-  .footer-copy { font-size: 10px; color: rgba(255,255,255,.18); font-weight: 300; letter-spacing: .1em; }
-  .footer-sources { display: flex; gap: 24px; }
-  .footer-source { font-size: 9px; letter-spacing: .2em; color: rgba(255,255,255,.2); text-transform: uppercase; font-weight: 300; }
-
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .9s ease, transform .9s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  .mist-layer { position: fixed; top: 0; left: 0; right: 0; height: 100vh; pointer-events: none; z-index: 50; background: linear-gradient(180deg, rgba(200,215,225,.18) 0%, rgba(200,215,225,.08) 40%, transparent 100%); transition: opacity .8s ease; }
-
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    .nav-links { display: none; }
-    .section-inner { padding: 80px 24px; }
-    .hero-content { padding: 0 24px 60px; }
-    .motivation-layout, .nature-layout { grid-template-columns: 1fr; gap: 40px; }
-    .program-item { grid-template-columns: 40px 1fr; }
-    .program-tag { display: none; }
-    .hero-meta { gap: 24px; flex-wrap: wrap; }
-    .footer-inner { padding: 60px 24px 40px; }
-    .footer-top { flex-direction: column; gap: 40px; }
-    .footer-info { text-align: left; }
-    .scroll-indicator { right: 24px; }
-  }
-</style>
+        .float-nav { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; gap: 15px; }
+        .nav-btn { font-size: 0.7rem; border: 1px solid rgba(0,0,0,0.1); padding: 12px 30px; border-radius: 40px; background: #fff; cursor: pointer; letter-spacing: 2px; transition: 0.3s; }
+        .nav-btn:hover { background: #111; color: #fff; }
+    </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="mist-layer" id="mistLayer"></div>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
-<nav>
-  <div class="nav-logo">두물머리 물안개 축제</div>
-  <ul class="nav-links">
-    <li><a href="#motivation">About</a></li>
-    <li><a href="#science">Science</a></li>
-    <li><a href="#nature">Nature</a></li>
-    <li><a href="#program">Program</a></li>
-  </ul>
-</nav>
+    <section id="intro">
+        <canvas id="fog-canvas"></canvas>
+        <h1 class="main-title">Sensory<br>Archive.</h1>
+        <div class="start-trigger" onclick="startTest()">Discover your essence →</div>
+    </section>
 
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-mist-bottom"></div>
-  <div class="hero-mist-vignette"></div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">Yangpyeong · Gyeonggi · 2025</p>
-    <h1 class="hero-title">
-      <span class="line1">Waking in</span>
-      <span class="line2">the Mist</span>
-    </h1>
-    <p class="hero-title-ko">두물머리 물안개 축제</p>
-    <div class="hero-meta">
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">일시</span>
-        <span class="hero-meta-value">2025. 10. 04 — 06</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">장소</span>
-        <span class="hero-meta-value">경기 양평 두물머리</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">최적 관람</span>
-        <span class="hero-meta-value">새벽 05:30 — 07:30</span>
-      </div>
-    </div>
-  </div>
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    <span class="scroll-text">Scroll</span>
-  </div>
-</section>
-
-<section id="motivation">
-  <div class="section-inner">
-    <div class="section-label reveal">01 — Motivation</div>
-    <div class="motivation-layout">
-      <div class="reveal">
-        <div class="motivation-number">∅</div>
-        <div class="motivation-stats">
-          <div>
-            <div class="stat-row"><span class="stat-num">147</span><span class="stat-unit">일 / year</span></div>
-            <p class="stat-desc">연평균 안개 발생일수<br>전국 최고 수준</p>
-          </div>
-          <div>
-            <div class="stat-row"><span class="stat-num">400</span><span class="stat-unit">년</span></div>
-            <p class="stat-desc">느티나무 수령<br>두 강이 만나는 자리의 증인</p>
-          </div>
-          <div>
-            <div class="stat-row"><span class="stat-num">2</span><span class="stat-unit">강의 합류</span></div>
-            <p class="stat-desc">남한강 × 북한강<br>물안개가 가장 짙은 이유</p>
-          </div>
+    <section id="test" class="hidden">
+        <div class="test-content">
+            <p id="progress" class="q-tag"></p>
+            <h2 id="question" class="q-text"></h2>
+            <div id="options" class="options-grid"></div>
         </div>
-      </div>
-      <div class="reveal">
-        <h2 class="motivation-heading">소음을 걷어내면,<br>안개가 보인다.</h2>
-        <p class="motivation-body">두물머리는 남한강과 북한강이 만나는 곳입니다. 이른 새벽, 두 강의 기온 차이가 수면 위로 피어오르는 물안개를 만들어냅니다. 이것은 자연이 매일 아침 연출하는 짧고 완전한 퍼포먼스입니다.</p>
-        <p class="motivation-body" style="margin-top:24px;">이 축제는 '볼거리'를 쌓는 대신 '비움'을 권합니다. 군더더기를 덜어낸 프로그램, 정적 속에서 피어오르는 안개, 그리고 400년을 버텨온 느티나무 한 그루가 전부입니다.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="science">
-  <div class="section-inner">
-    <div class="section-label reveal">02 — Science of Mist</div>
-    <h2 class="science-heading reveal">안개는 몇 시에<br>가장 아름다운가.</h2>
-    <div class="chart-container reveal">
-      <svg class="chart-svg" viewBox="0 0 900 200" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="mistGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7FA3B8" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#7FA3B8" stop-opacity="0.03"/>
-          </linearGradient>
-        </defs>
-        <line x1="0" y1="50" x2="900" y2="50" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-        <line x1="0" y1="100" x2="900" y2="100" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-        <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-        <path d="M0,190 C60,188 90,180 120,165 C150,150 165,130 190,105 C210,85 225,62 250,48 C270,36 290,32 310,30 C330,28 345,28 360,30 C380,33 395,42 415,55 C440,72 455,90 480,112 C505,134 525,152 560,165 C595,176 640,182 700,186 C750,189 800,190 900,190 Z" fill="url(#mistGrad)"/>
-        <path d="M0,190 C60,188 90,180 120,165 C150,150 165,130 190,105 C210,85 225,62 250,48 C270,36 290,32 310,30 C330,28 345,28 360,30 C380,33 395,42 415,55 C440,72 455,90 480,112 C505,134 525,152 560,165 C595,176 640,182 700,186 C750,189 800,190 900,190" fill="none" stroke="#7FA3B8" stroke-width="1.5" opacity="0.7"/>
-        <circle cx="310" cy="30" r="4" fill="#7FA3B8"/>
-        <line x1="310" y1="30" x2="310" y2="190" stroke="#7FA3B8" stroke-width="1" stroke-dasharray="4,4" opacity="0.3"/>
-      </svg>
+    <div id="loader" class="hidden">
+        <p style="letter-spacing: 8px;">ARCHIVING SENSES...</p>
+        <div class="load-line"></div>
     </div>
-    <div class="chart-labels reveal">
-      <span class="chart-label">00:00</span>
-      <span class="chart-label">02:00</span>
-      <span class="chart-label">04:00</span>
-      <span class="chart-label peak">06:00 ★</span>
-      <span class="chart-label">08:00</span>
-      <span class="chart-label">10:00</span>
-      <span class="chart-label">12:00</span>
-    </div>
-    <div class="chart-legend reveal">
-      <div class="legend-item"><span class="legend-value">05:30</span><span class="legend-label">안개 시작 시각</span></div>
-      <div class="legend-item"><span class="legend-value">06:10</span><span class="legend-label">밀도 최고점 (피크)</span></div>
-      <div class="legend-item"><span class="legend-value">07:40</span><span class="legend-label">일출과 함께 소산</span></div>
-      <div class="legend-item"><span class="legend-value">±8°C</span><span class="legend-label">수온·기온 최적 차이</span></div>
-    </div>
-  </div>
-</section>
 
-<section id="nature">
-  <div class="section-inner">
-    <div class="section-label reveal">03 — Nature Bio</div>
-    <div class="nature-layout">
-      <div>
-        <h2 class="nature-heading reveal">400년을 여기 서서,<br>두 강을 지켜보았다.</h2>
-        <table class="nature-table reveal">
-          <tr><td>학명</td><td>Zelkova serrata<br><span style="font-size:11px;color:var(--mist-4)">느티나무</span></td></tr>
-          <tr><td>수령</td><td>약 400년<br><span style="font-size:11px;color:var(--mist-4)">조선 중기 식재 추정</span></td></tr>
-          <tr><td>수고 / 흉고</td><td>수고 17m · 흉고 직경 4.5m<br><span style="font-size:11px;color:var(--mist-4)">경기도 보호수 지정</span></td></tr>
-          <tr><td>위치</td><td>양평군 양서면 두물머리길 145<br><span style="font-size:11px;color:var(--mist-4)">남·북한강 합류 지점 인접</span></td></tr>
-          <tr><td>생태 특성</td><td>강변 다습 환경 적응종. 봄의 연두, 가을의 단풍, 겨울의 수형이 사계절 모두 아름다움.</td></tr>
-        </table>
-      </div>
-      <div class="nature-visual reveal">
-        <svg class="tree-illustration" viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
-          <line x1="20" y1="305" x2="200" y2="305" stroke="#C8CDD2" stroke-width="1"/>
-          <path d="M100,305 C98,280 96,255 94,230 C92,205 90,185 95,165 C98,150 100,140 100,140" stroke="#9DAAB5" stroke-width="8" fill="none" stroke-linecap="round"/>
-          <path d="M100,200 C85,185 70,175 55,165" stroke="#9DAAB5" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M100,180 C115,165 130,158 148,150" stroke="#9DAAB5" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M100,160 C90,145 82,135 72,125" stroke="#9DAAB5" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M100,155 C112,140 122,132 134,122" stroke="#9DAAB5" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M72,125 C62,115 55,108 46,100" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M72,125 C78,112 82,104 84,94" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M134,122 C144,112 150,104 156,96" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M134,122 C130,108 128,100 126,90" stroke="#9DAAB5" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M55,165 C44,158 38,152 30,144" stroke="#9DAAB5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M148,150 C158,143 165,136 172,128" stroke="#9DAAB5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <circle cx="60" cy="88" r="28" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.6"/>
-          <circle cx="100" cy="72" r="36" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.4"/>
-          <circle cx="145" cy="85" r="26" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.6"/>
-          <circle cx="30" cy="130" r="18" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.5"/>
-          <circle cx="170" cy="115" r="18" fill="none" stroke="#C8CDD2" stroke-width="1" opacity="0.5"/>
-        </svg>
-        <p class="tree-caption">Zelkova serrata · 수령 400년<br>경기도 보호수</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="program">
-  <div class="section-inner">
-    <div class="section-label reveal">04 — Program</div>
-    <h2 class="program-heading reveal">채우는 대신,<br>비우는 프로그램.</h2>
-    <div class="program-list">
-      <div class="program-item">
-        <span class="program-index">01</span>
-        <div>
-          <p class="program-name">Silent Walk</p>
-          <p class="program-name-ko">사일런트 워크 — 헤드셋 새벽 산책</p>
-          <p class="program-desc">헤드셋을 착용하고 아무 말도 하지 않습니다. 가이드의 목소리 대신, 두물머리의 새소리와 물소리, 그리고 안개 속을 걷는 발소리만이 귀에 들어옵니다. 1시간, 완전한 침묵 속을 걷는 경험.</p>
+    <section id="result-page">
+        <div class="res-header">
+            <div class="res-hero-img"><img id="res-hero-img" src=""></div>
+            <div class="res-info-box">
+                <h2 id="res-title" class="res-title"></h2>
+                <p id="res-quote" style="font-family: var(--serif); font-size: 2.2rem; color: #666; font-style: italic;"></p>
+            </div>
         </div>
-        <div>
-          <p class="program-tag">05:30 — 07:00</p>
-          <p class="program-tag" style="margin-top:8px">선착순 20인</p>
+        
+        <div class="spec-container">
+            <div class="spec-section">
+                <span class="spec-label">Recommended Fragrance</span>
+                <ul id="res-perfumes" class="perfume-list"></ul>
+            </div>
+            <div class="spec-section">
+                <span class="spec-label">Archive Insights</span>
+                <div class="fact-box">
+                    <span class="fact-icon">ODD FACT //</span>
+                    <p id="res-fact" class="fact-text"></p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="program-item">
-        <span class="program-index">02</span>
-        <div>
-          <p class="program-name">Wish Boat</p>
-          <p class="program-name-ko">소원 돛단배 — 수면 위의 소원</p>
-          <p class="program-desc">한지에 소원을 써서 작은 돛단배에 실어 강으로 보냅니다. 안개 위로 천천히 멀어지는 배를 바라보는 것. 거창한 의식 없이, 그저 흘러 보내는 것만으로 충분합니다.</p>
+
+        <div class="float-nav">
+            <div class="nav-btn" onclick="openArchive()">VIEW ALL ARCHIVE</div>
+            <div class="nav-btn" onclick="location.reload()">RE-TEST</div>
         </div>
-        <div>
-          <p class="program-tag">06:00 — 08:00</p>
-          <p class="program-tag" style="margin-top:8px">상시 참여</p>
+    </section>
+
+    <div id="archive-browser">
+        <div style="display:flex; justify-content:space-between; align-items: center;">
+            <h2 style="font-family:var(--serif); font-size: 2rem;">THE ARCHIVE</h2>
+            <span style="cursor:pointer; letter-spacing: 2px;" onclick="closeArchive()">CLOSE EXIT —</span>
         </div>
-      </div>
-      <div class="program-item">
-        <span class="program-index">03</span>
-        <div>
-          <p class="program-name">Dawn Table</p>
-          <p class="program-name-ko">새벽 밥상 — 안개 속의 아침식사</p>
-          <p class="program-desc">안개가 걷히는 시간, 느티나무 아래에 밥상을 차립니다. 양평 지역 농산물로 차린 단촐한 아침 한 상. 말이 없어도 괜찮습니다. 그저 함께 먹는 것만으로 충분합니다.</p>
-        </div>
-        <div>
-          <p class="program-tag">07:00 — 09:00</p>
-          <p class="program-tag" style="margin-top:8px">사전 예약</p>
-        </div>
-      </div>
+        <div id="archive-track" class="archive-track"></div>
     </div>
-  </div>
-</section>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div>
-        <div class="footer-brand">Waking in the Mist</div>
-        <div class="footer-brand-ko">두물머리 물안개 축제 · 2025</div>
-      </div>
-      <div class="footer-info">
-        <div class="footer-info-row"><strong>주관</strong>경기 양평군청 문화관광과</div>
-        <div class="footer-info-row"><strong>기상 데이터 출처</strong>기상청 기후 통계 분석</div>
-        <div class="footer-info-row"><strong>문의</strong>031-770-2114</div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© 2025 양평군청. All rights reserved.</p>
-      <div class="footer-sources">
-        <span class="footer-source">양평군청</span>
-        <span class="footer-source">기상청</span>
-        <span class="footer-source">문화재청</span>
-      </div>
-    </div>
-  </div>
-</footer>
+    <script>
+        // --- 커서 로직 ---
+        const cur = document.querySelector('.cursor'), fol = document.querySelector('.cursor-follower');
+        document.addEventListener('mousemove', e=>{ 
+            cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; 
+            setTimeout(()=>{fol.style.left=e.clientX-11+'px'; fol.style.top=e.clientY-11+'px';},50); 
+        });
+        
+        // --- [수정] 강화된 마우스 안개 인터랙션 로직 ---
+        let mouseX = -1000, mouseY = -1000;
+        window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
-<script>
-  const cursor = document.getElementById('cursor');
-  const cursorRing = document.getElementById('cursorRing');
-  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
-  });
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+        const canvas = document.getElementById('fog-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        // 입자 수를 줄이고 크기를 키워 움직임을 더 잘 보이게 함
+        let numParticles = 18; 
 
-  const mistLayer = document.getElementById('mistLayer');
-  window.addEventListener('scroll', () => {
-    const fade = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.6));
-    mistLayer.style.opacity = fade;
-  });
+        function resize() { 
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight; 
+            particles = Array(numParticles).fill().map(()=>new Particle()); 
+        }
+        window.addEventListener('resize', resize);
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal, .program-item').forEach(el => observer.observe(el));
-</script>
+        function Particle() {
+            this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height;
+            this.vx = (Math.random()-0.5)*0.3; // 기본 흐름은 아주 느리게
+            this.vy = (Math.random()-0.5)*0.3;
+            this.radius = Math.random()*350+250; // 거대한 구름 크기
+            const c = ['rgba(255,200,210,0.8)','rgba(180,220,240,0.8)','rgba(220,180,240,0.8)','rgba(255,250,220,0.8)'];
+            this.color = c[Math.floor(Math.random()*c.length)];
+        }
+
+        Particle.prototype.update = function() {
+            // 마우스 상호작용 계산
+            let dx = this.x - mouseX;
+            let dy = this.y - mouseY;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // [수정] 영향 범위를 넓히고 밀어내는 힘을 대폭 강화
+            let influenceRadius = 350; 
+            if(distance < influenceRadius) {
+                let force = (influenceRadius - distance) / influenceRadius;
+                // 밀어내는 속도를 35로 상향 (기존 20에서 대폭 강화)
+                this.x += (dx / distance) * force * 35; 
+                this.y += (dy / distance) * force * 35;
+            }
+
+            // 기본 느린 이동
+            this.x += this.vx; this.y += this.vy;
+
+            // 화면 이탈 방지
+            if(this.x<-this.radius) this.x=canvas.width+this.radius; if(this.x>canvas.width+this.radius) this.x=-this.radius;
+            if(this.y<-this.radius) this.y=canvas.height+this.radius; if(this.y>canvas.height+this.radius) this.y=-this.radius;
+        }
+
+        Particle.prototype.draw = function() {
+            ctx.beginPath();
+            let g = ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.radius);
+            g.addColorStop(0,this.color); 
+            // [수정] 마우스 주변 안개 입자를 더 투명하게 만들어 갈라지는 느낌 강화
+            let dx = this.x - mouseX, dy = this.y - mouseY, dist = Math.sqrt(dx*dx+dy*dy);
+            let edgeOpacity = (dist < 300) ? 0 : 1; // 마우스 근처 300px 이내는 가장자리를 투명하게
+            g.addColorStop(edgeOpacity, 'rgba(255,255,255,0)');
+            
+            ctx.fillStyle=g; ctx.arc(this.x,this.y,this.radius,0,Math.PI*2); ctx.fill();
+        }
+
+        function anim() {
+            // [수정] 매 프레임 흰색 배경으로 초기화하여 잔상을 없애고 움직임을 깔끔하게 보여줌
+            ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,canvas.width,canvas.height); 
+            particles.forEach(p=>{p.update();p.draw();}); 
+            requestAnimationFrame(anim); 
+        }
+        resize(); anim();
+
+        // --- 테스트 데이터 ---
+        const questions = [
+            { q: "공간에서 느껴지는 공기의 습도는?", a: [{t:"건조하고 쾌적한", v:"woody"}, {t:"촉촉한 정원", v:"floral"}, {t:"안개 낀 고요함", v:"chypre"}, {t:"시원한 파도", v:"citrus"}] },
+            { q: "공간을 채울 음악의 선율은?", a: [{t:"우아한 클래식", v:"floral"}, {t:"경쾌한 시티팝", v:"citrus"}, {t:"로파이 재즈", v:"musk"}, {t:"어쿠스틱 팝", v:"fruity"}] },
+            { q: "손끝에 닿는 소재의 질감은?", a: [{t:"단단한 통원목", v:"woody"}, {t:"부드러운 실크", v:"floral"}, {t:"바스락거리는 린넨", v:"musk"}, {t:"톡톡 튀는 니트", v:"fruity"}] },
+            { q: "당신을 깨우는 아침 햇살은?", a: [{t:"강렬한 빛의 줄기", v:"citrus"}, {t:"부드러운 금빛", v:"fruity"}, {t:"차분한 새벽녘 푸른빛", v:"woody"}, {t:"은은한 구름 사이 빛", v:"floral"}] },
+            { q: "선호하는 휴식의 형태는?", a: [{t:"낯선 거리 탐색", v:"citrus"}, {t:"숲속에서의 명상", v:"woody"}, {t:"포근한 낮잠", v:"musk"}, {t:"미술관 관람", v:"chypre"}] },
+            { q: "방안에 두고 싶은 가구는?", a: [{t:"화려한 벨벳 소파", v:"floral"}, {t:"투명한 유리 테이블", v:"citrus"}, {t:"묵직한 원목 책상", v:"woody"}, {t:"포근한 1인용 체어", v:"musk"}] },
+            { q: "마음을 끄는 풍경은?", a: [{t:"만개한 꽃밭", v:"floral"}, {t:"끝없는 지평선", v:"woody"}, {t:"파스텔톤 노을", v:"fruity"}, {t:"대리석 건축물", v:"chypre"}] },
+            { q: "지금 가장 필요한 에너지는?", a: [{t:"기분 좋은 활력", v:"citrus"}, {t:"깊고 고요한 평온", v:"woody"}, {t:"따뜻한 위로", v:"musk"}, {t:"세련된 영감", v:"chypre"}] }
+        ];
+
+        const archiveData = {
+            floral: { name:"Floral", quote:"A Blooming Narrative", perfumes: ["Dior - J'adore", "Gucci - Bloom", "Diptyque - Eau Rose"], fact: "장미 향수 1ml를 추출하기 위해 약 3,000송이의 장미가 필요하다는 사실을 아시나요?", hero: "floral.jpg" },
+            citrus: { name:"Citrus", quote:"The Vitality of Air", perfumes: ["AdP - Mirto", "Jo Malone - Lime Basil", "Atelier Cologne - Pomelo"], fact: "시트러스 계열의 향은 뇌의 주의력을 높여 업무 효율을 10% 이상 향상시킨다는 연구 결과가 있습니다.", hero: "citrus.jpg" },
+            woody: { name:"Woody", quote:"Solitude in the Forest", perfumes: ["Le Labo - Santal 33", "Aesop - Hwyl", "Diptyque - Tam Dao"], fact: "우디 향의 주원료인 '샌달우드'는 나무가 향을 내기 위해 최소 30년 이상 자라야 채취가 가능합니다.", hero: "woody.jpg" },
+            musk: { name:"Musk", quote:"Warmth on the Skin", perfumes: ["Byredo - Blanche", "Kiehl's - Musk", "Diptyque - Fleur de Peau"], fact: "인간은 본능적으로 머스크 향에서 어머니의 살결 같은 평온함을 느끼도록 설계되어 있습니다.", hero: "musk.jpg" },
+            fruity: { name:"Fruity", quote:"A Rhythmic Sweetness", perfumes: ["Jo Malone - Pear & Freesia", "Gucci - Flora", "Byredo - Pulp"], fact: "후각은 미각의 80%를 결정합니다. 프루티 향을 맡는 것만으로도 당신의 뇌는 단맛을 느낄 준비를 합니다.", hero: "fruity.jpg" },
+            chypre: { name:"Chypre", quote:"Sophisticated Depth", perfumes: ["Chanel - Mademoiselle", "Sisley - Eau du Soir", "Kilian - Moonlight"], fact: "시프레(Chypre)는 지중해의 키프로스 섬을 뜻하며, 대지와 숲의 향이 결합된 가장 지적인 계열로 꼽힙니다.", hero: "chypre.jpg" }
+        };
+
+        // --- 로직 (테스트 시작, 질문 노출, 결과 렌더링) ---
+        let curQ = 0, scores = { floral:0, citrus:0, woody:0, musk:0, fruity:0, chypre:0 };
+
+        function startTest() { document.getElementById('intro').classList.add('hidden'); document.getElementById('test').classList.remove('hidden'); showQ(); }
+        function showQ() {
+            const q = questions[curQ]; 
+            document.getElementById('progress').innerText = `STEP 0${curQ + 1}/08`;
+            document.getElementById('question').innerText = q.q;
+            const opt = document.getElementById('options'); opt.innerHTML = '';
+            q.a.forEach(item => {
+                const b = document.createElement('button'); b.className='opt-btn'; b.innerText=item.t;
+                b.onclick = () => { scores[item.v]++; curQ++; if(curQ<questions.length) showQ(); else end(); };
+                opt.appendChild(b);
+            });
+        }
+        function end() {
+            document.getElementById('test').classList.add('hidden'); document.getElementById('loader').classList.remove('hidden');
+            const winner = Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+            setTimeout(() => { 
+                render(winner); document.getElementById('loader').classList.add('hidden'); 
+                document.getElementById('result-page').style.display='block'; window.scrollTo(0,0);
+            }, 2500);
+        }
+        function render(key) {
+            const d = archiveData[key];
+            document.getElementById('res-title').innerText = d.name;
+            document.getElementById('res-quote').innerText = d.quote;
+            document.getElementById('res-fact').innerText = d.fact;
+            document.getElementById('res-hero-img').src = d.hero;
+            document.getElementById('res-perfumes').innerHTML = d.perfumes.map(p=>`<li>${p}</li>`).join('');
+        }
+
+        function openArchive() {
+            const track = document.getElementById('archive-track'); track.innerHTML = '';
+            Object.keys(archiveData).forEach(key => {
+                const d = archiveData[key];
+                const card = document.createElement('div'); card.className = 'archive-card';
+                card.innerHTML = `<img src="${d.hero}"><h4>${d.name}</h4>`;
+                card.onclick = () => { render(key); closeArchive(); window.scrollTo(0,0); };
+                track.appendChild(card);
+            });
+            document.getElementById('archive-browser').style.display = 'flex';
+        }
+        function closeArchive() { document.getElementById('archive-browser').style.display = 'none'; }
+    </script>
 </body>
 </html>
