@@ -47,7 +47,25 @@
         .bottle-item:hover { transform: translateY(-20px) scale(1.05); }
         .bottle-label { font-family: var(--serif); font-size: 0.95rem; text-transform: uppercase; margin-top: 15px; display: block; letter-spacing: 4px; font-weight: 600; }
 
-        /* [Basics 개편] 에디토리얼 스타일 */
+        /* 로딩 페이지 스타일 */
+        #test-loader {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #fff;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .loader-title { font-family: var(--serif); font-size: 2.5rem; letter-spacing: 10px; color: var(--text); margin-bottom: 20px; animation: loadingBlur 2s infinite ease-in-out; }
+        .loader-sub { font-family: var(--sans); font-size: 0.8rem; letter-spacing: 4px; color: var(--accent); font-weight: 700; }
+        @keyframes loadingBlur {
+            0%, 100% { filter: blur(0px); opacity: 1; transform: scale(1); }
+            50% { filter: blur(8px); opacity: 0.3; transform: scale(1.05); }
+        }
+
         #basics-page { display: none; position: fixed; inset: 0; z-index: 7000; background: #fff; overflow-y: auto; padding: 100px 5%; }
         .basics-header { text-align: center; margin-bottom: 100px; }
         .basics-header h2 { font-family: var(--serif); font-size: 5rem; font-weight: 300; letter-spacing: -2px; }
@@ -60,7 +78,6 @@
         .info-card { padding: 30px; border: 1px solid #eee; text-align: center; }
         .info-card h5 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        /* 테스트 섹션 */
         #test { display: none; position: fixed; inset: 0; z-index: 5000; background: #fff; flex-direction: column; align-items: center; justify-content: center; }
         .test-content { width: 100%; max-width: 850px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         #progress { letter-spacing: 5px; color: var(--accent); margin-bottom: 25px; font-weight: 700; font-size: 0.9rem; }
@@ -69,7 +86,6 @@
         .opt-btn { padding: 30px; background: #fff; border: 1px solid #eee; transition: 0.4s; cursor: pointer; font-size: 1.1rem; }
         .opt-btn:hover { border-color: #111; transform: translateY(-5px); background: #fafafa; }
 
-        /* 아카이브 & 플립카드 */
         #archive-browser { display: none; position: fixed; inset: 0; z-index: 5000; background: #fff; flex-direction: column; align-items: center; justify-content: center; }
         .archive-container { position: relative; width: 450px; height: 580px; perspective: 2000px; }
         .archive-card { position: absolute; inset: 0; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; pointer-events: none; transform-style: preserve-3d; }
@@ -88,7 +104,6 @@
         .arrow-left { left: 8%; }
         .arrow-right { right: 8%; }
 
-        /* 결과 페이지 */
         #result-page { display: none; position: fixed; inset: 0; z-index: 5000; background: #fff; overflow-y: auto; height: 100vh; }
         .res-header { height: 100vh; display: flex; align-items: center; padding: 0 10%; background: #fdfcfb; }
         .res-hero-img { width: 45%; height: 75vh; box-shadow: 30px 30px 80px rgba(0,0,0,0.06); }
@@ -146,41 +161,105 @@
             <h2>The Art of Essence</h2>
             <p style="letter-spacing:5px; color:#aaa; margin-top:20px;">보이지 않는 예술, 향수의 세계에 대하여</p>
         </div>
-
         <div class="basics-article">
-            <div class="basics-img-full">
-                <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=1000" alt="History">
-            </div>
+            <div class="basics-img-full"><img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=1000" alt="History"></div>
             <div class="basics-text">
                 <h4>1. Origin: 연기에서 예술로</h4>
                 <p>향수의 어원인 라틴어 <b>'Per Fumum'</b>은 '연기를 통하여'라는 뜻입니다. 고대 이집트인들이 신에게 제사를 지내기 위해 향기 나는 나무를 태웠던 것이 향수의 시작이었습니다.</p>
-                <p>이후 14세기 헝가리 워터의 발명과 16세기 이탈리아 메디치 가문을 통해 향수는 '냄새를 가리는 용도'를 넘어 '개성을 표현하는 사치품'으로 진화했습니다. 현재는 프랑스 남부의 <b>그라스(Grasse)</b>가 전 세계 천연 향료의 성지로 불리며 그 명맥을 잇고 있습니다.</p>
+                <p>이후 14세기 헝가리 워터의 발명과 16세기 이탈리아 메디치 가문을 통해 향수는 '냄새를 가리는 용도'를 넘어 '개성을 표현하는 사치품'으로 진화했습니다.</p>
             </div>
-
             <div class="basics-text">
                 <h4>2. Aesthetic: 향기의 미학</h4>
-                <p>향기를 대하는 태도는 국가별로 뚜렷한 차이를 보입니다. <b>유럽(특히 프랑스)</b>은 향수를 자신의 사회적 존재감을 알리는 화려한 액세서리로 여깁니다. 발산력(Sillage)이 강하고 묵직한 베이스가 특징이죠.</p>
-                <p>반면 <b>한국과 일본</b>을 포함한 동아시아에서는 향수가 타인에게 방해가 되지 않는 '정갈함'을 추구합니다. 마치 비누나 샴푸처럼 은은하게 살결에 머무는 '스킨 센트'를 선호하는 경향이 강합니다.</p>
+                <p>향기를 대하는 태도는 국가별로 뚜렷한 차이를 보입니다. <b>유럽</b>은 향수를 화려한 액세서리로 여기며 강한 발산력을 선호하는 반면, <b>동아시아</b>에서는 타인에게 방해가 되지 않는 '정갈함'과 은은한 '스킨 센트'를 선호합니다.</p>
             </div>
-            <div class="basics-img-full">
-                <img src="https://images.unsplash.com/photo-1592947906741-c05764a496b2?auto=format&fit=crop&q=80&w=1000" alt="Culture">
-            </div>
+            <div class="basics-img-full"><img src="https://images.unsplash.com/photo-1592947906741-c05764a496b2?auto=format&fit=crop&q=80&w=1000" alt="Culture"></div>
+            <style>
+    /* 디자인 디테일을 위한 추가 스타일 */
+    .info-card { 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: flex-start;
+        text-align: left; /* 가독성을 위해 좌측 정렬 권장 */
+    }
+    .info-card h5 { 
+        font-weight: 700; 
+        letter-spacing: 2px; 
+        margin-bottom: 20px; 
+    }
+    .note-item { 
+        margin-bottom: 15px; 
+        padding-left: 10px; 
+        border-left: 1px solid var(--accent); 
+    }
+    .note-item b { 
+        display: block; 
+        font-family: var(--serif); 
+        font-size: 1.1rem; 
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+    .note-item span { 
+        font-size: 0.85rem; 
+        color: #666; 
+        line-height: 1.5;
+        display: block;
+    }
+    .concentration-list { 
+        list-style: none; 
+        padding: 0; 
+    }
+    .concentration-list li { 
+        display: flex; 
+        justify-content: space-between; 
+        margin-bottom: 10px; 
+        font-size: 0.9rem;
+        border-bottom: 1px dotted #eee;
+        padding-bottom: 5px;
+    }
+</style>
 
-            <div class="info-card-grid">
-                <div class="info-card">
-                    <h5>부향률 (Concentration)</h5>
-                    <p style="font-size:0.9rem;">Parfum (15-30%): 12시간+ 지속<br>EDP (10-15%): 5-7시간 지속<br>EDT (5-10%): 3-4시간 지속</p>
-                </div>
-                <div class="info-card">
-                    <h5>노트 (The Pyramid)</h5>
-                    <p style="font-size:0.9rem;">Top: 첫인상 (15분)<br>Middle: 향의 심장 (2시간)<br>Base: 영혼의 잔향 (잔향 전체)</p>
-                </div>
-                <div class="info-card">
-                    <h5>보관 (Care)</h5>
-                    <p style="font-size:0.9rem;">직사광선과 습기를 피하세요.<br>서늘한 곳에 보관해야<br>향의 변질을 막을 수 있습니다.</p>
-                </div>
-            </div>
+<div class="info-card-grid">
+    <div class="info-card">
+        <h5>Concentration</h5>
+        <ul class="concentration-list">
+            <li><span>Parfum (15-30%)</span> <b>12h+</b></li>
+            <li><span>Eau de Parfum</span> <b>5-7h</b></li>
+            <li><span>Eau de Toilette</span> <b>3-4h</b></li>
+            <li><span>Eau de Cologne</span> <b>1-2h</b></li>
+        </ul>
+        <p style="font-size: 0.8rem; color: #999; margin-top: 15px; font-style: italic;">
+            *부향률이 높을수록 향의 깊이와 지속시간이 늘어납니다.
+        </p>
+    </div>
+
+    <div class="info-card" style="grid-column: span 1;">
+        <h5>Scent Structure</h5>
+        <div class="note-item">
+            <b>Top Note</b>
+            <span>분사 직후 ~ 15분. 휘발성이 강한 시트러스, 허브 계열의 첫인상.</span>
         </div>
+        <div class="note-item">
+            <b>Middle Note</b>
+            <span>30분 ~ 2시간. 향의 심장(Heart)부. 조향사가 의도한 메인 테마.</span>
+        </div>
+        <div class="note-item">
+            <b>Base Note</b>
+            <span>3시간 ~ 잔향. 우디, 머스크 등 분자량이 큰 성분의 지속력.</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h5>Care Guide</h5>
+        <p style="line-height: 1.8; margin-bottom: 15px;">
+            향수는 온도와 빛에 민감한 <b>'살아있는 물질'</b>입니다.
+        </p>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 2px; font-size: 0.9rem;">
+            • 직사광선이 없는 그늘진 곳<br>
+            • 변화가 적은 일정 온도 (15℃ 내외)<br>
+            • 흔들림이 적고 습기가 없는 공간
+        </div>
+    </div>
+</div>
         <div class="float-nav"><div class="nav-btn" onclick="location.reload()">RESET</div></div>
     </section>
 
@@ -191,6 +270,11 @@
             <div id="options" class="options-grid"></div>
         </div>
     </section>
+
+    <div id="test-loader">
+        <h2 class="loader-title">ALCHEMIZING...</h2>
+        <p class="loader-sub">당신의 향기를 조향하고 있습니다.</p>
+    </div>
 
     <div id="archive-browser">
         <div class="nav-arrow arrow-left" onclick="changeCard(-1)">←</div>
@@ -219,6 +303,7 @@
     </section>
 
     <script>
+        // 캔버스 & 커서 기본 로직
         const canvas = document.getElementById('fog-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -249,13 +334,14 @@
         const cur = document.querySelector('.cursor'), fol = document.querySelector('.cursor-follower');
         document.addEventListener('mousemove', e=>{ cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; setTimeout(()=>{fol.style.left=e.clientX-11+'px'; fol.style.top=e.clientY-11+'px';},50); });
 
+        // 데이터 세트
         const archiveData = {
             floral: { name:"Floral", ko:"따뜻하고 사랑스러운 꽃의 향연", quote:"A Blooming Narrative", fact: "플로럴 계열은 장미, 자스민 등 꽃을 주원료로 하며 자존감을 높여줍니다.", perfumes: ["Dior - J'adore", "Gucci - Bloom", "Chanel - Chance", "Byredo - Inflorescence", "Diptyque - Do Son"], hero: "floral.jpg" },
             citrus: { name:"Citrus", ko:"상큼한 과즙과 청량한 에너지", quote:"Vitality of Light", fact: "레몬, 오렌지 등의 생동감을 담아 집중력을 높여주는 계열입니다.", perfumes: ["Jo Malone - Lime Basil", "AdP - Mirto", "Hermes - Orange Verte", "Byredo - Sundazed", "Aesop - Tacit"], hero: "citrus.jpg" },
-            woody: { name:"Woody", ko:"깊은 숲의 고요함과 단단함", quote:"Solitude in Forest", fact: "샌달우드, 시더우드 등 나무의 향으로 안정을 돕는 계열입니다.", perfumes: ["Le Labo - Santal 33", "Aesop - Hwyl", "Diptyque - Tam Dao", "Byredo - Super Cedar", "Tom Ford - Oud Wood"], hero: "woody.jpg" },
+            woody: { name:"Woody", ko:"깊은 숲의 고요함과 단단함", quote:"Solitude in Forest", fact: "나무의 향으로 안정을 돕는 계열입니다.", perfumes: ["Le Labo - Santal 33", "Aesop - Hwyl", "Diptyque - Tam Dao", "Byredo - Super Cedar", "Tom Ford - Oud Wood"], hero: "woody.jpg" },
             musk: { name:"Musk", ko:"포근한 살결의 부드러운 잔향", quote:"Warmth on Skin", fact: "체온과 만났을 때 가장 편안하고 개인적인 분위기를 만듭니다.", perfumes: ["Byredo - Blanche", "Diptyque - Fleur de Peau", "Kiehl's - Original Musk", "Tom Ford - White Suede", "Le Labo - Another 13"], hero: "musk.jpg" },
-            fruity: { name:"Fruity", ko:"달콤하고 상큼한 과즙의 유혹", quote:"Juicy Nostalgia", fact: "복숭아, 사과 등 과일 향이 기분을 경쾌하게 해주는 계열입니다.", perfumes: ["Jo Malone - Nectarine Blossom", "Byredo - Pulp", "Diptyque - Philosykos", "Tom Ford - Lost Cherry", "YSL - Mon Paris"], hero: "fruity.jpg" },
-            chypre: { name:"Chypre", ko:"축축한 이끼와 대지의 세련미", quote:"Earthy Sophistication", fact: "상큼한 탑노트와 묵직한 이끼향이 조화를 이루는 지적 계열입니다.", perfumes: ["Jo Malone - English Pear", "Diptyque - Eau Capitale", "Aesop - Karst", "Chanel - Cristalle", "Dior - Miss Dior(Original)"], hero: "chypre.jpg" }
+            fruity: { name:"Fruity", ko:"달콤하고 상큼한 과즙의 유혹", quote:"Juicy Nostalgia", fact: "과일 향이 기분을 경쾌하게 해주는 계열입니다.", perfumes: ["Jo Malone - Nectarine Blossom", "Byredo - Pulp", "Diptyque - Philosykos", "Tom Ford - Lost Cherry", "YSL - Mon Paris"], hero: "fruity.jpg" },
+            chypre: { name:"Chypre", ko:"축축한 이끼와 대지의 세련미", quote:"Earthy Sophistication", fact: "지적이고 세련된 분위기를 자아내는 계열입니다.", perfumes: ["Jo Malone - English Pear", "Diptyque - Eau Capitale", "Aesop - Karst", "Chanel - Cristalle", "Dior - Miss Dior(Original)"], hero: "chypre.jpg" }
         };
 
         const perfumeMeta = {
@@ -306,8 +392,10 @@
         const keys = Object.keys(archiveData);
         let activeIdx = 0;
 
+        // 페이지 전환 로직
         function openBasics() { document.getElementById('intro').style.display='none'; document.getElementById('basics-page').style.display='block'; }
         function startTest() { document.getElementById('intro').style.display='none'; document.getElementById('test').style.display='flex'; curQ=0; scores={floral:0, citrus:0, woody:0, musk:0, fruity:0, chypre:0}; showQ(); }
+        
         function showQ() {
             const q = questions[curQ]; document.getElementById('progress').innerText = `STEP ${curQ+1} / 8`;
             document.getElementById('question').innerText = q.q;
@@ -318,7 +406,19 @@
                 opt.appendChild(b);
             });
         }
-        function endTest() { renderResult(Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b)); }
+
+        // 로딩 연출이 포함된 endTest (3초 대기)
+        function endTest() {
+            document.getElementById('test').style.display = 'none';
+            const loader = document.getElementById('test-loader');
+            loader.style.display = 'flex';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                renderResult(Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b));
+            }, 3000);
+        }
+
         function openArchive() { document.getElementById('intro').style.display='none'; document.getElementById('archive-browser').style.display='flex'; renderCards(); }
         function closeArchive() { document.getElementById('archive-browser').style.display='none'; document.getElementById('intro').style.display='block'; document.getElementById('intro').classList.remove('active'); }
 
