@@ -3,81 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SENSORY ARCHIVE: THE INTERACTIVE FOG</title>
+    <title>SENSORY ARCHIVE | 6 CATEGORIES</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #ffffff; --text: #111; --accent: #c5a47e; --serif: 'Cormorant Garamond', serif; --sans: 'Inter', sans-serif; }
+        :root { --bg: #fefefd; --text: #111; --accent: #c5a47e; --serif: 'Cormorant Garamond', serif; --sans: 'Inter', sans-serif; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
-        body { background-color: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; scroll-behavior: smooth; }
+        body { background-color: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; }
 
-        /* 커서 */
         .cursor { width: 8px; height: 8px; background: #000; border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; }
         .cursor-follower { width: 30px; height: 30px; border: 1px solid rgba(0,0,0,0.2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; }
-        .hidden { display: none !important; }
 
-        /* [1. INTRO: 강화된 안개] */
-        #intro { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-left: 10%; background: #ffffff; position: relative; overflow: hidden; }
+        .global-home-btn { position: fixed; top: 40px; left: 40px; z-index: 8000; font-family: var(--serif); font-size: 1.2rem; letter-spacing: 3px; cursor: pointer; border-bottom: 1px solid #000; padding-bottom: 5px; }
+
+        #intro { height: 100vh; width: 100%; position: relative; overflow: hidden; background: #fff; }
+        #fog-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; filter: blur(80px); opacity: 0.3; pointer-events: none; }
         
-        /* [수정] 블러를 낮추고 불투명도를 높여 안개를 더 선명하게 만듦 */
-        #fog-canvas { 
-            position: absolute; 
-            inset: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 1; 
-            pointer-events: none; 
-            filter: blur(25px); /* 블러를 줄여 입자감을 살림 */
-            opacity: 0.9; /* 안개를 더 진하게 */
+        .close-trigger { position: absolute; inset: 0; z-index: 5; display: none; }
+        #intro.active .close-trigger { display: block; }
+
+        .intro-ui { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 12vh 0 38vh; pointer-events: none; transition: 0.8s; }
+        #intro.active .intro-ui { opacity: 0; transform: translateY(-30px); }
+        .main-title { font-family: var(--serif); font-size: 5vw; text-transform: uppercase; font-weight: 300; letter-spacing: 8px; }
+
+        .drawer-instruction { font-family: var(--serif); font-style: italic; font-size: 0.9rem; color: var(--accent); margin-bottom: 15px; letter-spacing: 2px; animation: blink 2s infinite; text-align: center; }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        .drawer-scene { position: absolute; bottom: 12vh; left: 50%; transform: translateX(-50%); width: 700px; height: 190px; z-index: 20; perspective: 2500px; }
+        .drawer-front { 
+            position: absolute; inset: 0; background-color: #fdfdfc; border-radius: 2px;
+            box-shadow: 0 35px 70px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(0,0,0,0.03); 
+            cursor: pointer; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: bottom; display: flex; align-items: center; justify-content: center; z-index: 5;
         }
+        .drawer-handle { width: 100px; height: 12px; border-radius: 6px; background: linear-gradient(to bottom, #f0f0f0 0%, #dcdcdc 100%); border: 1px solid #c0c0c0; }
         
-        .main-title { font-family: var(--serif); font-size: 10vw; line-height: 0.85; font-weight: 300; text-transform: uppercase; z-index: 2; position: relative; }
-        .start-trigger { margin-top: 50px; font-family: var(--serif); font-size: 1.8rem; font-style: italic; text-decoration: underline; color: #555; cursor: pointer; transition: 0.4s; z-index: 2; position: relative; }
+        .drawer-content { 
+            position: absolute; inset: 0; background: #fff; opacity: 0; transform: translateY(-30px); transition: 0.6s; 
+            display: flex; justify-content: space-around; align-items: center; padding: 0 50px; pointer-events: none;
+        }
+        #intro.active .drawer-front { transform: rotateX(-65deg) translateY(30px); opacity: 0; pointer-events: none; }
+        #intro.active .drawer-content { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
-        /* [2. TEST] */
-        #test { height: 100vh; display: flex; align-items: center; justify-content: center; background: #fafafa; padding: 0 10%; position: relative; z-index: 5; }
-        .test-content { width: 100%; max-width: 800px; text-align: center; }
-        .q-tag { color: var(--accent); font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 20px; }
-        .q-text { font-family: var(--serif); font-size: 3.2rem; line-height: 1.2; margin-bottom: 60px; font-style: italic; font-weight: 300; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .opt-btn { padding: 25px; background: transparent; border: 1px solid #ddd; font-size: 1rem; transition: 0.3s; cursor: pointer; color: #666; }
-        .opt-btn:hover { border-color: #111; color: #111; background: #fff; transform: translateY(-3px); }
+        .bottle-item { width: 130px; cursor: pointer; transition: 0.5s; text-align: center; }
+        .bottle-item:hover { transform: translateY(-20px) scale(1.05); }
+        .bottle-label { font-family: var(--serif); font-size: 0.95rem; text-transform: uppercase; margin-top: 15px; display: block; letter-spacing: 4px; font-weight: 600; }
 
-        /* [3. LOADING] */
-        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .load-line { width: 200px; height: 1px; background: #eee; overflow: hidden; position: relative; margin-top: 20px; }
-        .load-line::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: #111; animation: l 2s infinite; }
-        @keyframes l { to { left: 100%; } }
+        /* [Basics 개편] 에디토리얼 스타일 */
+        #basics-page { display: none; position: fixed; inset: 0; z-index: 7000; background: #fff; overflow-y: auto; padding: 100px 5%; }
+        .basics-header { text-align: center; margin-bottom: 100px; }
+        .basics-header h2 { font-family: var(--serif); font-size: 5rem; font-weight: 300; letter-spacing: -2px; }
+        .basics-article { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 120px; }
+        .basics-img-full { width: 100%; height: 400px; background: #f8f8f6; overflow: hidden; margin-bottom: 30px; }
+        .basics-img-full img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .basics-text h4 { font-family: var(--serif); font-size: 2rem; margin-bottom: 25px; color: var(--accent); }
+        .basics-text p { line-height: 1.8; color: #444; margin-bottom: 20px; font-size: 1rem; }
+        .info-card-grid { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 50px; }
+        .info-card { padding: 30px; border: 1px solid #eee; text-align: center; }
+        .info-card h5 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        /* [4. RESULT PAGE] */
-        #result-page { display: none; background: #ffffff; padding-bottom: 150px; }
-        .res-header { height: 100vh; display: flex; align-items: center; padding: 0 8%; position: relative; }
-        .res-hero-img { width: 40%; height: 70vh; background: #eee; overflow: hidden; }
+        /* 테스트 섹션 */
+        #test { display: none; position: fixed; inset: 0; z-index: 5000; background: #fff; flex-direction: column; align-items: center; justify-content: center; }
+        .test-content { width: 100%; max-width: 850px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        #progress { letter-spacing: 5px; color: var(--accent); margin-bottom: 25px; font-weight: 700; font-size: 0.9rem; }
+        .q-text { font-family: var(--serif); font-size: 2.8rem; line-height: 1.4; margin-bottom: 70px; font-style: italic; min-height: 8rem; display: flex; align-items: center; justify-content: center; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+        .opt-btn { padding: 30px; background: #fff; border: 1px solid #eee; transition: 0.4s; cursor: pointer; font-size: 1.1rem; }
+        .opt-btn:hover { border-color: #111; transform: translateY(-5px); background: #fafafa; }
+
+        /* 아카이브 & 플립카드 */
+        #archive-browser { display: none; position: fixed; inset: 0; z-index: 5000; background: #fff; flex-direction: column; align-items: center; justify-content: center; }
+        .archive-container { position: relative; width: 450px; height: 580px; perspective: 2000px; }
+        .archive-card { position: absolute; inset: 0; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; pointer-events: none; transform-style: preserve-3d; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
+        .archive-card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-face { position: absolute; inset: 0; backface-visibility: hidden; background: #fff; border: 1px solid #eee; display: flex; flex-direction: column; overflow: hidden; }
+        .card-back { transform: rotateY(180deg); background: #fdfcfb; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .card-face h4 { font-family: var(--serif); font-size: 2.2rem; text-align: center; padding: 35px; text-transform: uppercase; letter-spacing: 5px; }
+        .ko-desc-label { text-align: center; font-size: 0.9rem; color: var(--accent); margin-top: -20px; padding-bottom: 20px; font-weight: 600; }
+        .card-active { opacity: 1; z-index: 10; pointer-events: auto; }
+        .card-past { transform: translate(-150px, -50px) rotate(-10deg) scale(0.8); opacity: 0.2; }
+        .card-next { transform: translate(150px, 50px) rotate(10deg) scale(0.8); opacity: 0.2; }
+
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 3rem; font-family: var(--serif); color: #ddd; cursor: pointer; z-index: 4000; transition: 0.3s; padding: 20px; }
+        .nav-arrow:hover { color: #111; }
+        .arrow-left { left: 8%; }
+        .arrow-right { right: 8%; }
+
+        /* 결과 페이지 */
+        #result-page { display: none; position: fixed; inset: 0; z-index: 5000; background: #fff; overflow-y: auto; height: 100vh; }
+        .res-header { height: 100vh; display: flex; align-items: center; padding: 0 10%; background: #fdfcfb; }
+        .res-hero-img { width: 45%; height: 75vh; box-shadow: 30px 30px 80px rgba(0,0,0,0.06); }
         .res-hero-img img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .res-info-box { width: 50%; padding-left: 8%; }
-        .res-title { font-family: var(--serif); font-size: 8rem; line-height: 1; border-bottom: 10px solid #111; display: inline-block; margin-bottom: 30px; text-transform: uppercase; }
-        
-        .spec-container { padding: 0 8%; margin-top: -50px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px; }
-        .spec-section { border-top: 1px solid #111; padding-top: 30px; }
-        .spec-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; display: block; }
-        
-        .perfume-list { list-style: none; }
-        .perfume-list li { font-family: var(--serif); font-size: 2.2rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
-        .fact-box { background: #f9f9f9; padding: 40px; position: relative; }
-        .fact-text { font-family: var(--serif); font-size: 1.5rem; line-height: 1.6; font-style: italic; color: #333; }
-        .fact-icon { font-size: 0.7rem; color: var(--accent); margin-bottom: 15px; display: block; letter-spacing: 2px; }
+        .res-info-box { width: 55%; padding-left: 8%; }
+        .res-title { font-family: var(--serif); font-size: 6vw; border-bottom: 12px solid #111; display: inline-block; margin-bottom: 35px; text-transform: uppercase; line-height: 1; }
+        .fact-box { margin-top: 30px; padding: 30px; background: #f8f8f6; border-left: 2px solid var(--accent); }
+        .fact-box h5 { font-family: var(--serif); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; color: var(--accent); font-weight: 600; }
+        .fact-box p { font-size: 0.95rem; line-height: 1.8; color: #444; }
 
-        /* [5. ARCHIVE] */
-        #archive-browser { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 3000; display: none; flex-direction: column; padding: 5% 8%; backdrop-filter: blur(10px); }
-        .archive-track { display: flex; gap: 30px; overflow-x: auto; padding: 40px 0; scrollbar-width: none; }
-        .archive-card { min-width: 250px; height: 350px; border: 1px solid #eee; cursor: pointer; text-align: center; flex-shrink: 0; transition: 0.4s; background: #fff; }
-        .archive-card:hover { border-color: #111; transform: translateY(-10px); }
-        .archive-card img { width: 100%; height: 80%; object-fit: cover; }
-        .archive-card h4 { font-family: var(--serif); font-size: 1.2rem; margin-top: 15px; text-transform: uppercase; }
+        .spec-container { padding: 100px 10% 150px; display: flex; flex-direction: column; gap: 80px; background: #fff; }
+        .scent-card { display: grid; grid-template-columns: 200px 1fr 300px; gap: 60px; border-bottom: 1px solid #f0f0f0; padding: 60px 0; align-items: center; }
+        .scent-img-box { width: 200px; height: 250px; background: #fafafa; display: flex; align-items: center; justify-content: center; border: 1px solid #f2f2f2; }
+        .note-info { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; padding: 20px; background: #fdfdfd; border: 1px dashed #ddd; }
+        .note-line { font-size: 0.9rem; color: #666; }
+        .note-line b { color: #111; font-family: var(--serif); text-transform: uppercase; margin-right: 10px; }
+        .timeline-svg { width: 100%; height: 70px; margin-top: 25px; overflow: visible; }
+        .curve-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawCurve 3s forwards; }
+        @keyframes drawCurve { to { stroke-dashoffset: 0; } }
 
-        .float-nav { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; gap: 15px; }
-        .nav-btn { font-size: 0.7rem; border: 1px solid rgba(0,0,0,0.1); padding: 12px 30px; border-radius: 40px; background: #fff; cursor: pointer; letter-spacing: 2px; transition: 0.3s; }
+        .float-nav { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); z-index: 7000; display: flex; gap: 20px; }
+        .nav-btn { font-size: 0.85rem; border: 1px solid #ddd; padding: 20px 50px; border-radius: 60px; background: #fff; cursor: pointer; letter-spacing: 3px; font-weight: 700; transition: 0.4s; }
         .nav-btn:hover { background: #111; color: #fff; }
     </style>
 </head>
@@ -86,23 +119,87 @@
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
 
+    <div class="global-home-btn" onclick="location.reload()">HOME</div>
+
     <section id="intro">
         <canvas id="fog-canvas"></canvas>
-        <h1 class="main-title">Sensory<br>Archive.</h1>
-        <div class="start-trigger" onclick="startTest()">Discover your essence →</div>
+        <div class="close-trigger" onclick="document.getElementById('intro').classList.remove('active')"></div>
+        <div class="intro-ui">
+            <h1 class="main-title">Sensory Archive</h1>
+            <p style="font-family:var(--serif); font-style:italic; font-size:1.3rem; color:#888;">The Hexagon of Ethereal Fragments</p>
+        </div>
+        <div class="drawer-scene">
+            <div class="drawer-instruction">CLICK TO OPEN THE DRAWER</div>
+            <div class="drawer-front" onclick="document.getElementById('intro').classList.add('active')">
+                <div class="drawer-handle"></div>
+            </div>
+            <div class="drawer-content">
+                <div class="bottle-item" onclick="openBasics()"><img src="perfume.png" width="130" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3050/3050525.png'" alt=""><span class="bottle-label">Basics</span></div>
+                <div class="bottle-item" onclick="openArchive()"><img src="perfume.png" width="130" alt=""><span class="bottle-label">Archive</span></div>
+                <div class="bottle-item" onclick="startTest()"><img src="perfume.png" width="130" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3050/3050487.png'" alt=""><span class="bottle-label">Diagnosis</span></div>
+            </div>
+        </div>
     </section>
 
-    <section id="test" class="hidden">
+    <section id="basics-page">
+        <div class="basics-header">
+            <h2>The Art of Essence</h2>
+            <p style="letter-spacing:5px; color:#aaa; margin-top:20px;">보이지 않는 예술, 향수의 세계에 대하여</p>
+        </div>
+
+        <div class="basics-article">
+            <div class="basics-img-full">
+                <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=1000" alt="History">
+            </div>
+            <div class="basics-text">
+                <h4>1. Origin: 연기에서 예술로</h4>
+                <p>향수의 어원인 라틴어 <b>'Per Fumum'</b>은 '연기를 통하여'라는 뜻입니다. 고대 이집트인들이 신에게 제사를 지내기 위해 향기 나는 나무를 태웠던 것이 향수의 시작이었습니다.</p>
+                <p>이후 14세기 헝가리 워터의 발명과 16세기 이탈리아 메디치 가문을 통해 향수는 '냄새를 가리는 용도'를 넘어 '개성을 표현하는 사치품'으로 진화했습니다. 현재는 프랑스 남부의 <b>그라스(Grasse)</b>가 전 세계 천연 향료의 성지로 불리며 그 명맥을 잇고 있습니다.</p>
+            </div>
+
+            <div class="basics-text">
+                <h4>2. Aesthetic: 향기의 미학</h4>
+                <p>향기를 대하는 태도는 국가별로 뚜렷한 차이를 보입니다. <b>유럽(특히 프랑스)</b>은 향수를 자신의 사회적 존재감을 알리는 화려한 액세서리로 여깁니다. 발산력(Sillage)이 강하고 묵직한 베이스가 특징이죠.</p>
+                <p>반면 <b>한국과 일본</b>을 포함한 동아시아에서는 향수가 타인에게 방해가 되지 않는 '정갈함'을 추구합니다. 마치 비누나 샴푸처럼 은은하게 살결에 머무는 '스킨 센트'를 선호하는 경향이 강합니다.</p>
+            </div>
+            <div class="basics-img-full">
+                <img src="https://images.unsplash.com/photo-1592947906741-c05764a496b2?auto=format&fit=crop&q=80&w=1000" alt="Culture">
+            </div>
+
+            <div class="info-card-grid">
+                <div class="info-card">
+                    <h5>부향률 (Concentration)</h5>
+                    <p style="font-size:0.9rem;">Parfum (15-30%): 12시간+ 지속<br>EDP (10-15%): 5-7시간 지속<br>EDT (5-10%): 3-4시간 지속</p>
+                </div>
+                <div class="info-card">
+                    <h5>노트 (The Pyramid)</h5>
+                    <p style="font-size:0.9rem;">Top: 첫인상 (15분)<br>Middle: 향의 심장 (2시간)<br>Base: 영혼의 잔향 (잔향 전체)</p>
+                </div>
+                <div class="info-card">
+                    <h5>보관 (Care)</h5>
+                    <p style="font-size:0.9rem;">직사광선과 습기를 피하세요.<br>서늘한 곳에 보관해야<br>향의 변질을 막을 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+        <div class="float-nav"><div class="nav-btn" onclick="location.reload()">RESET</div></div>
+    </section>
+
+    <section id="test">
         <div class="test-content">
-            <p id="progress" class="q-tag"></p>
+            <p id="progress"></p>
             <h2 id="question" class="q-text"></h2>
             <div id="options" class="options-grid"></div>
         </div>
     </section>
 
-    <div id="loader" class="hidden">
-        <p style="letter-spacing: 8px;">ARCHIVING SENSES...</p>
-        <div class="load-line"></div>
+    <div id="archive-browser">
+        <div class="nav-arrow arrow-left" onclick="changeCard(-1)">←</div>
+        <div class="nav-arrow arrow-right" onclick="changeCard(1)">→</div>
+        <div id="card-wrap" class="archive-container"></div>
+        <div class="float-nav">
+            <div class="nav-btn" onclick="closeArchive()">BACK</div>
+            <div class="nav-btn" onclick="location.reload()">RESET</div>
+        </div>
     </div>
 
     <section id="result-page">
@@ -110,180 +207,196 @@
             <div class="res-hero-img"><img id="res-hero-img" src=""></div>
             <div class="res-info-box">
                 <h2 id="res-title" class="res-title"></h2>
-                <p id="res-quote" style="font-family: var(--serif); font-size: 2.2rem; color: #666; font-style: italic;"></p>
+                <p id="res-quote" style="font-family:var(--serif); font-size:2.2rem; font-style:italic; color:#777; margin-bottom:15px;"></p>
+                <div id="res-fact" class="fact-box"></div>
             </div>
         </div>
-        
         <div class="spec-container">
-            <div class="spec-section">
-                <span class="spec-label">Recommended Fragrance</span>
-                <ul id="res-perfumes" class="perfume-list"></ul>
-            </div>
-            <div class="spec-section">
-                <span class="spec-label">Archive Insights</span>
-                <div class="fact-box">
-                    <span class="fact-icon">ODD FACT //</span>
-                    <p id="res-fact" class="fact-text"></p>
-                </div>
-            </div>
+            <h3 style="font-family:var(--serif); font-size:3rem; text-align:center; letter-spacing:15px; margin-bottom:40px;">THE CURATION</h3>
+            <ul id="res-perfumes" style="list-style:none;"></ul>
         </div>
-
-        <div class="float-nav">
-            <div class="nav-btn" onclick="openArchive()">VIEW ALL ARCHIVE</div>
-            <div class="nav-btn" onclick="location.reload()">RE-TEST</div>
-        </div>
+        <div class="float-nav"><div class="nav-btn" onclick="location.reload()">RESET</div></div>
     </section>
 
-    <div id="archive-browser">
-        <div style="display:flex; justify-content:space-between; align-items: center;">
-            <h2 style="font-family:var(--serif); font-size: 2rem;">THE ARCHIVE</h2>
-            <span style="cursor:pointer; letter-spacing: 2px;" onclick="closeArchive()">CLOSE EXIT —</span>
-        </div>
-        <div id="archive-track" class="archive-track"></div>
-    </div>
-
     <script>
-        // --- 커서 로직 ---
-        const cur = document.querySelector('.cursor'), fol = document.querySelector('.cursor-follower');
-        document.addEventListener('mousemove', e=>{ 
-            cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; 
-            setTimeout(()=>{fol.style.left=e.clientX-11+'px'; fol.style.top=e.clientY-11+'px';},50); 
-        });
-        
-        // --- [수정] 강화된 마우스 안개 인터랙션 로직 ---
-        let mouseX = -1000, mouseY = -1000;
-        window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-
         const canvas = document.getElementById('fog-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        
-        // 입자 수를 줄이고 크기를 키워 움직임을 더 잘 보이게 함
-        let numParticles = 18; 
-
-        function resize() { 
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight; 
-            particles = Array(numParticles).fill().map(()=>new Particle()); 
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; particles = []; for(let i=0; i<15; i++) particles.push(new Particle()); }
         window.addEventListener('resize', resize);
-
         function Particle() {
-            this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height;
-            this.vx = (Math.random()-0.5)*0.3; // 기본 흐름은 아주 느리게
-            this.vy = (Math.random()-0.5)*0.3;
-            this.radius = Math.random()*350+250; // 거대한 구름 크기
-            const c = ['rgba(255,200,210,0.8)','rgba(180,220,240,0.8)','rgba(220,180,240,0.8)','rgba(255,250,220,0.8)'];
-            this.color = c[Math.floor(Math.random()*c.length)];
+            this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3;
+            this.radius = Math.random() * 500 + 300;
+            this.color = ['rgba(255, 240, 245, 0.5)','rgba(240, 255, 240, 0.5)','rgba(240, 245, 255, 0.5)','rgba(255, 250, 240, 0.5)','rgba(248, 240, 255, 0.5)'][Math.floor(Math.random() * 5)];
         }
-
         Particle.prototype.update = function() {
-            // 마우스 상호작용 계산
-            let dx = this.x - mouseX;
-            let dy = this.y - mouseY;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // [수정] 영향 범위를 넓히고 밀어내는 힘을 대폭 강화
-            let influenceRadius = 350; 
-            if(distance < influenceRadius) {
-                let force = (influenceRadius - distance) / influenceRadius;
-                // 밀어내는 속도를 35로 상향 (기존 20에서 대폭 강화)
-                this.x += (dx / distance) * force * 35; 
-                this.y += (dy / distance) * force * 35;
-            }
-
-            // 기본 느린 이동
             this.x += this.vx; this.y += this.vy;
-
-            // 화면 이탈 방지
-            if(this.x<-this.radius) this.x=canvas.width+this.radius; if(this.x>canvas.width+this.radius) this.x=-this.radius;
-            if(this.y<-this.radius) this.y=canvas.height+this.radius; if(this.y>canvas.height+this.radius) this.y=-this.radius;
+            if(this.x < -this.radius) this.x = canvas.width + this.radius;
+            if(this.x > canvas.width + this.radius) this.x = -this.radius;
+            if(this.y < -this.radius) this.y = canvas.height + this.radius;
+            if(this.y > canvas.height + this.radius) this.y = -this.radius;
         }
-
         Particle.prototype.draw = function() {
             ctx.beginPath();
-            let g = ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.radius);
-            g.addColorStop(0,this.color); 
-            // [수정] 마우스 주변 안개 입자를 더 투명하게 만들어 갈라지는 느낌 강화
-            let dx = this.x - mouseX, dy = this.y - mouseY, dist = Math.sqrt(dx*dx+dy*dy);
-            let edgeOpacity = (dist < 300) ? 0 : 1; // 마우스 근처 300px 이내는 가장자리를 투명하게
-            g.addColorStop(edgeOpacity, 'rgba(255,255,255,0)');
-            
-            ctx.fillStyle=g; ctx.arc(this.x,this.y,this.radius,0,Math.PI*2); ctx.fill();
+            let g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+            g.addColorStop(0, this.color); g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = g; ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fill();
         }
-
-        function anim() {
-            // [수정] 매 프레임 흰색 배경으로 초기화하여 잔상을 없애고 움직임을 깔끔하게 보여줌
-            ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,canvas.width,canvas.height); 
-            particles.forEach(p=>{p.update();p.draw();}); 
-            requestAnimationFrame(anim); 
-        }
+        function anim() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
         resize(); anim();
 
-        // --- 테스트 데이터 ---
-        const questions = [
-            { q: "공간에서 느껴지는 공기의 습도는?", a: [{t:"건조하고 쾌적한", v:"woody"}, {t:"촉촉한 정원", v:"floral"}, {t:"안개 낀 고요함", v:"chypre"}, {t:"시원한 파도", v:"citrus"}] },
-            { q: "공간을 채울 음악의 선율은?", a: [{t:"우아한 클래식", v:"floral"}, {t:"경쾌한 시티팝", v:"citrus"}, {t:"로파이 재즈", v:"musk"}, {t:"어쿠스틱 팝", v:"fruity"}] },
-            { q: "손끝에 닿는 소재의 질감은?", a: [{t:"단단한 통원목", v:"woody"}, {t:"부드러운 실크", v:"floral"}, {t:"바스락거리는 린넨", v:"musk"}, {t:"톡톡 튀는 니트", v:"fruity"}] },
-            { q: "당신을 깨우는 아침 햇살은?", a: [{t:"강렬한 빛의 줄기", v:"citrus"}, {t:"부드러운 금빛", v:"fruity"}, {t:"차분한 새벽녘 푸른빛", v:"woody"}, {t:"은은한 구름 사이 빛", v:"floral"}] },
-            { q: "선호하는 휴식의 형태는?", a: [{t:"낯선 거리 탐색", v:"citrus"}, {t:"숲속에서의 명상", v:"woody"}, {t:"포근한 낮잠", v:"musk"}, {t:"미술관 관람", v:"chypre"}] },
-            { q: "방안에 두고 싶은 가구는?", a: [{t:"화려한 벨벳 소파", v:"floral"}, {t:"투명한 유리 테이블", v:"citrus"}, {t:"묵직한 원목 책상", v:"woody"}, {t:"포근한 1인용 체어", v:"musk"}] },
-            { q: "마음을 끄는 풍경은?", a: [{t:"만개한 꽃밭", v:"floral"}, {t:"끝없는 지평선", v:"woody"}, {t:"파스텔톤 노을", v:"fruity"}, {t:"대리석 건축물", v:"chypre"}] },
-            { q: "지금 가장 필요한 에너지는?", a: [{t:"기분 좋은 활력", v:"citrus"}, {t:"깊고 고요한 평온", v:"woody"}, {t:"따뜻한 위로", v:"musk"}, {t:"세련된 영감", v:"chypre"}] }
-        ];
+        const cur = document.querySelector('.cursor'), fol = document.querySelector('.cursor-follower');
+        document.addEventListener('mousemove', e=>{ cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; setTimeout(()=>{fol.style.left=e.clientX-11+'px'; fol.style.top=e.clientY-11+'px';},50); });
 
         const archiveData = {
-            floral: { name:"Floral", quote:"A Blooming Narrative", perfumes: ["Dior - J'adore", "Gucci - Bloom", "Diptyque - Eau Rose"], fact: "장미 향수 1ml를 추출하기 위해 약 3,000송이의 장미가 필요하다는 사실을 아시나요?", hero: "floral.jpg" },
-            citrus: { name:"Citrus", quote:"The Vitality of Air", perfumes: ["AdP - Mirto", "Jo Malone - Lime Basil", "Atelier Cologne - Pomelo"], fact: "시트러스 계열의 향은 뇌의 주의력을 높여 업무 효율을 10% 이상 향상시킨다는 연구 결과가 있습니다.", hero: "citrus.jpg" },
-            woody: { name:"Woody", quote:"Solitude in the Forest", perfumes: ["Le Labo - Santal 33", "Aesop - Hwyl", "Diptyque - Tam Dao"], fact: "우디 향의 주원료인 '샌달우드'는 나무가 향을 내기 위해 최소 30년 이상 자라야 채취가 가능합니다.", hero: "woody.jpg" },
-            musk: { name:"Musk", quote:"Warmth on the Skin", perfumes: ["Byredo - Blanche", "Kiehl's - Musk", "Diptyque - Fleur de Peau"], fact: "인간은 본능적으로 머스크 향에서 어머니의 살결 같은 평온함을 느끼도록 설계되어 있습니다.", hero: "musk.jpg" },
-            fruity: { name:"Fruity", quote:"A Rhythmic Sweetness", perfumes: ["Jo Malone - Pear & Freesia", "Gucci - Flora", "Byredo - Pulp"], fact: "후각은 미각의 80%를 결정합니다. 프루티 향을 맡는 것만으로도 당신의 뇌는 단맛을 느낄 준비를 합니다.", hero: "fruity.jpg" },
-            chypre: { name:"Chypre", quote:"Sophisticated Depth", perfumes: ["Chanel - Mademoiselle", "Sisley - Eau du Soir", "Kilian - Moonlight"], fact: "시프레(Chypre)는 지중해의 키프로스 섬을 뜻하며, 대지와 숲의 향이 결합된 가장 지적인 계열로 꼽힙니다.", hero: "chypre.jpg" }
+            floral: { name:"Floral", ko:"따뜻하고 사랑스러운 꽃의 향연", quote:"A Blooming Narrative", fact: "플로럴 계열은 장미, 자스민 등 꽃을 주원료로 하며 자존감을 높여줍니다.", perfumes: ["Dior - J'adore", "Gucci - Bloom", "Chanel - Chance", "Byredo - Inflorescence", "Diptyque - Do Son"], hero: "floral.jpg" },
+            citrus: { name:"Citrus", ko:"상큼한 과즙과 청량한 에너지", quote:"Vitality of Light", fact: "레몬, 오렌지 등의 생동감을 담아 집중력을 높여주는 계열입니다.", perfumes: ["Jo Malone - Lime Basil", "AdP - Mirto", "Hermes - Orange Verte", "Byredo - Sundazed", "Aesop - Tacit"], hero: "citrus.jpg" },
+            woody: { name:"Woody", ko:"깊은 숲의 고요함과 단단함", quote:"Solitude in Forest", fact: "샌달우드, 시더우드 등 나무의 향으로 안정을 돕는 계열입니다.", perfumes: ["Le Labo - Santal 33", "Aesop - Hwyl", "Diptyque - Tam Dao", "Byredo - Super Cedar", "Tom Ford - Oud Wood"], hero: "woody.jpg" },
+            musk: { name:"Musk", ko:"포근한 살결의 부드러운 잔향", quote:"Warmth on Skin", fact: "체온과 만났을 때 가장 편안하고 개인적인 분위기를 만듭니다.", perfumes: ["Byredo - Blanche", "Diptyque - Fleur de Peau", "Kiehl's - Original Musk", "Tom Ford - White Suede", "Le Labo - Another 13"], hero: "musk.jpg" },
+            fruity: { name:"Fruity", ko:"달콤하고 상큼한 과즙의 유혹", quote:"Juicy Nostalgia", fact: "복숭아, 사과 등 과일 향이 기분을 경쾌하게 해주는 계열입니다.", perfumes: ["Jo Malone - Nectarine Blossom", "Byredo - Pulp", "Diptyque - Philosykos", "Tom Ford - Lost Cherry", "YSL - Mon Paris"], hero: "fruity.jpg" },
+            chypre: { name:"Chypre", ko:"축축한 이끼와 대지의 세련미", quote:"Earthy Sophistication", fact: "상큼한 탑노트와 묵직한 이끼향이 조화를 이루는 지적 계열입니다.", perfumes: ["Jo Malone - English Pear", "Diptyque - Eau Capitale", "Aesop - Karst", "Chanel - Cristalle", "Dior - Miss Dior(Original)"], hero: "chypre.jpg" }
         };
 
-        // --- 로직 (테스트 시작, 질문 노출, 결과 렌더링) ---
-        let curQ = 0, scores = { floral:0, citrus:0, woody:0, musk:0, fruity:0, chypre:0 };
+        const perfumeMeta = {
+            "Dior - J'adore": { top: "Pear, Melon", mid: "Jasmine, Rose", base: "Musk, Vanilla", path: "M0,50 Q100,5 400,35", color: "#d4af37" },
+            "Gucci - Bloom": { top: "Green Notes", mid: "Tuberose, Jasmine", base: "Orris Root", path: "M0,45 Q150,10 400,45", color: "#f08080" },
+            "Chanel - Chance": { top: "Pink Pepper", mid: "Jasmine, Iris", base: "Patchouli, Musk", path: "M0,40 Q100,60 400,30", color: "#ffb6c1" },
+            "Byredo - Inflorescence": { top: "Rose Petals", mid: "Lily, Magnolia", base: "Jasmine", path: "M0,30 Q200,10 400,40", color: "#90ee90" },
+            "Diptyque - Do Son": { top: "African Orange Flower", mid: "Tuberose", base: "Musk", path: "M0,55 Q100,20 400,55", color: "#afeeee" },
+            "Jo Malone - Lime Basil": { top: "Lime, Mandarin", mid: "Basil, Thyme", base: "Patchouli", path: "M0,15 Q60,65 400,65", color: "#8fbc8f" },
+            "AdP - Mirto": { top: "Myrtle, Lemon", mid: "Sea Notes", base: "Juniper, Amber", path: "M0,20 Q100,50 400,60", color: "#1e90ff" },
+            "Hermes - Orange Verte": { top: "Orange, Mint", mid: "Papaya", base: "Oakmoss", path: "M0,10 Q100,10 400,70", color: "#006400" },
+            "Byredo - Sundazed": { top: "Mandarin, Lemon", mid: "Neroli, Jasmine", base: "Musk", path: "M0,25 Q150,60 400,25", color: "#ffa500" },
+            "Aesop - Tacit": { top: "Yuzu, Citrus", mid: "Basil", base: "Vetiver", path: "M0,30 Q100,70 400,50", color: "#556b2f" },
+            "Le Labo - Santal 33": { top: "Cardamom", mid: "Iris, Papyrus", base: "Sandalwood", path: "M0,60 Q150,55 400,15", color: "#556b2f" },
+            "Aesop - Hwyl": { top: "Spices", mid: "Cypress", base: "Vetiver, Oakmoss", path: "M0,55 Q180,45 400,10", color: "#3e4e3e" },
+            "Diptyque - Tam Dao": { top: "Rose, Cypress", mid: "Sandalwood", base: "Amber, Musk", path: "M0,70 Q200,60 400,20", color: "#8b4513" },
+            "Byredo - Super Cedar": { top: "Rose", mid: "Cedar", base: "Vetiver, Musk", path: "M0,65 Q100,40 400,30" , color: "#cd853f" },
+            "Tom Ford - Oud Wood": { top: "Cardamom", mid: "Oud, Sandalwood", base: "Vanilla, Amber", path: "M0,75 Q150,65 400,5", color: "#2f4f4f" },
+            "Byredo - Blanche": { top: "Aldehydes", mid: "Peony, Violet", base: "Musk, Sandalwood", path: "M0,45 C120,45 280,55 400,55", color: "#708090" },
+            "Diptyque - Fleur de Peau": { top: "Angelica", mid: "Iris, Rose", base: "Musk, Leather", path: "M0,58 Q200,55 400,25", color: "#db7093" },
+            "Kiehl's - Original Musk": { top: "Orange Blossom", mid: "Rose", base: "Musk, Tonka", path: "M0,60 Q200,70 400,40", color: "#a52a2a" },
+            "Tom Ford - White Suede": { top: "Tea, Thyme", mid: "Saffron", base: "Suede, Musk", path: "M0,50 Q100,60 400,45", color: "#f5f5dc" },
+            "Le Labo - Another 13": { top: "Pear, Apple", mid: "Ambrette", base: "Ambergris, Musk", path: "M0,40 Q200,30 400,50", color: "#dcdcdc" },
+            "Jo Malone - Nectarine Blossom": { top: "Green Notes", mid: "Nectarine", base: "Peach", path: "M0,35 Q150,60 400,25", color: "#ff7f50" },
+            "Byredo - Pulp": { top: "Bergamot", mid: "Fig, Apple", base: "Cedar", path: "M0,20 Q100,5 400,45", color: "#dc143c" },
+            "Diptyque - Philosykos": { top: "Fig Leaf", mid: "Fig", base: "Fig Tree", path: "M0,40 Q150,15 400,35", color: "#228b22" },
+            "Tom Ford - Lost Cherry": { top: "Sour Cherry", mid: "Almond", base: "Tonka Bean", path: "M0,60 Q200,10 400,20", color: "#800000" },
+            "YSL - Mon Paris": { top: "Strawberry", mid: "Datura", base: "Patchouli", path: "M0,45 Q120,65 400,25", color: "#ff69b4" },
+            "Jo Malone - English Pear": { top: "Pear, Melon", mid: "Freesia", base: "Patchouli", path: "M0,35 Q200,5 400,65", color: "#c5a47e" },
+            "Diptyque - Eau Capitale": { top: "Bergamot", mid: "Rose", base: "Patchouli", path: "M0,50 Q120,20 400,45", color: "#800080" },
+            "Aesop - Karst": { top: "Juniper, Sage", mid: "Rosemary", base: "Cedar, Cumin", path: "M0,25 Q100,45 400,65", color: "#778899" },
+            "Chanel - Cristalle": { top: "Lemon", mid: "Hyacinth", base: "Oakmoss", path: "M0,15 Q100,15 400,60", color: "#2e8b57" },
+            "Dior - Miss Dior(Original)": { top: "Galbanum", mid: "Jasmine", base: "Oakmoss", path: "M0,65 Q150,10 400,40", color: "#556b2f" }
+        };
 
-        function startTest() { document.getElementById('intro').classList.add('hidden'); document.getElementById('test').classList.remove('hidden'); showQ(); }
+        const questions = [
+            { q: "감각이 선명해지는 계절은?", a: [{t: "봄", v: "floral"}, {t: "여름", v: "fruity"}, {t: "가을", v: "chypre"}, {t: "겨울", v: "woody"}] },
+            { q: "지금 공간의 습도는?", a: [{t:"촉촉함", v:"floral"}, {t:"흙내음", v:"woody"}, {t:"신선함", v:"fruity"}, {t:"서늘함", v:"chypre"}] },
+            { q: "오늘 선택한 옷의 텍스처?", a: [{t:"린넨", v:"citrus"}, {t:"실크", v:"floral"}, {t:"니트", v:"musk"}, {t:"트위드", v:"chypre"}] },
+            { q: "마시고 싶은 드링크?", a: [{t:"레몬에이드", v:"citrus"}, {t:"블랙커피", v:"woody"}, {t:"과일넥타", v:"fruity"}, {t:"홍차", v:"chypre"}] },
+            { q: "배경 음악을 고른다면?", a: [{t:"재즈", v:"citrus"}, {t:"클래식", v:"floral"}, {t:"앰비언트", v:"woody"}, {t:"로파이", v:"musk"}] },
+            { q: "나른함을 달래줄 활동?", a: [{t:"꽃꽂이", v:"floral"}, {t:"디저트 시식", v:"fruity"}, {t:"명상", v:"woody"}, {t:"산책", v:"citrus"}] },
+            { q: "다음 여행지는?", a: [{t:"꽃시장", v:"floral"}, {t:"과수원", v:"fruity"}, {t:"깊은 숲", v:"woody"}, {t:"파리", v:"chypre"}] },
+            { q: "어떤 기억으로 남고 싶나요?", a: [{t:"활기찬", v:"citrus"}, {t:"신비로운", v:"musk"}, {t:"사랑스러운", v:"fruity"}, {t:"지적인 세련미", v:"chypre"}] }
+        ];
+
+        let curQ = 0, scores = { floral:0, citrus:0, woody:0, musk:0, fruity:0, chypre:0 };
+        const keys = Object.keys(archiveData);
+        let activeIdx = 0;
+
+        function openBasics() { document.getElementById('intro').style.display='none'; document.getElementById('basics-page').style.display='block'; }
+        function startTest() { document.getElementById('intro').style.display='none'; document.getElementById('test').style.display='flex'; curQ=0; scores={floral:0, citrus:0, woody:0, musk:0, fruity:0, chypre:0}; showQ(); }
         function showQ() {
-            const q = questions[curQ]; 
-            document.getElementById('progress').innerText = `STEP 0${curQ + 1}/08`;
+            const q = questions[curQ]; document.getElementById('progress').innerText = `STEP ${curQ+1} / 8`;
             document.getElementById('question').innerText = q.q;
             const opt = document.getElementById('options'); opt.innerHTML = '';
             q.a.forEach(item => {
                 const b = document.createElement('button'); b.className='opt-btn'; b.innerText=item.t;
-                b.onclick = () => { scores[item.v]++; curQ++; if(curQ<questions.length) showQ(); else end(); };
+                b.onclick = () => { scores[item.v]++; curQ++; if(curQ<8) showQ(); else endTest(); };
                 opt.appendChild(b);
             });
         }
-        function end() {
-            document.getElementById('test').classList.add('hidden'); document.getElementById('loader').classList.remove('hidden');
-            const winner = Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-            setTimeout(() => { 
-                render(winner); document.getElementById('loader').classList.add('hidden'); 
-                document.getElementById('result-page').style.display='block'; window.scrollTo(0,0);
-            }, 2500);
-        }
-        function render(key) {
-            const d = archiveData[key];
-            document.getElementById('res-title').innerText = d.name;
-            document.getElementById('res-quote').innerText = d.quote;
-            document.getElementById('res-fact').innerText = d.fact;
-            document.getElementById('res-hero-img').src = d.hero;
-            document.getElementById('res-perfumes').innerHTML = d.perfumes.map(p=>`<li>${p}</li>`).join('');
+        function endTest() { renderResult(Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b)); }
+        function openArchive() { document.getElementById('intro').style.display='none'; document.getElementById('archive-browser').style.display='flex'; renderCards(); }
+        function closeArchive() { document.getElementById('archive-browser').style.display='none'; document.getElementById('intro').style.display='block'; document.getElementById('intro').classList.remove('active'); }
+
+        function renderCards() {
+            const wrap = document.getElementById('card-wrap'); wrap.innerHTML = '';
+            keys.forEach((key, i) => {
+                const card = document.createElement('div'); card.className = 'archive-card';
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-face">
+                            <img src="${archiveData[key].hero}" style="width:100%;height:70%;object-fit:cover;">
+                            <h4>${archiveData[key].name}</h4>
+                            <p class="ko-desc-label">${archiveData[key].ko}</p>
+                            <p style="text-align:center; font-size:0.7rem; color:#ccc;">CLICK TO FLIP</p>
+                        </div>
+                        <div class="card-face card-back">
+                            <h5 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:15px;">${archiveData[key].name}</h5>
+                            <p style="line-height:1.6; font-size:0.85rem; color:#666; padding:0 10px;">${archiveData[key].fact}</p>
+                            <button onclick="event.stopPropagation(); renderResult('${key}')" style="margin-top:20px; padding:12px 25px; background:#111; color:#fff; border:none; cursor:pointer; font-family:var(--serif);">VIEW ALL</button>
+                        </div>
+                    </div>`;
+                card.onclick = () => { if(card.classList.contains('card-active')) card.classList.toggle('flipped'); };
+                wrap.appendChild(card);
+            });
+            updateCardPositions();
         }
 
-        function openArchive() {
-            const track = document.getElementById('archive-track'); track.innerHTML = '';
-            Object.keys(archiveData).forEach(key => {
-                const d = archiveData[key];
-                const card = document.createElement('div'); card.className = 'archive-card';
-                card.innerHTML = `<img src="${d.hero}"><h4>${d.name}</h4>`;
-                card.onclick = () => { render(key); closeArchive(); window.scrollTo(0,0); };
-                track.appendChild(card);
+        function updateCardPositions() {
+            const cards = document.querySelectorAll('.archive-card');
+            cards.forEach((card, i) => {
+                card.className = 'archive-card';
+                if (i === activeIdx) card.classList.add('card-active');
+                else if (i === (activeIdx - 1 + keys.length) % keys.length) card.classList.add('card-past');
+                else if (i === (activeIdx + 1) % keys.length) card.classList.add('card-next');
             });
-            document.getElementById('archive-browser').style.display = 'flex';
         }
-        function closeArchive() { document.getElementById('archive-browser').style.display = 'none'; }
+        function changeCard(dir) { activeIdx = (activeIdx + dir + keys.length) % keys.length; updateCardPositions(); }
+
+        function renderResult(key) {
+            const d = archiveData[key];
+            document.getElementById('archive-browser').style.display='none';
+            document.getElementById('test').style.display='none';
+            document.getElementById('basics-page').style.display='none';
+            document.getElementById('result-page').style.display='block';
+            document.getElementById('res-title').innerText = d.name;
+            document.getElementById('res-quote').innerText = d.quote;
+            document.getElementById('res-hero-img').src = d.hero;
+            document.getElementById('res-fact').innerHTML = `<h5>ARCHIVE FACT: ${d.name}</h5><p>${d.fact}</p>`;
+            
+            const perfWrap = document.getElementById('res-perfumes');
+            perfWrap.innerHTML = `
+                <div style="text-align:center; margin-bottom:50px; opacity:0.6; font-size:0.8rem; letter-spacing:2px;">
+                    SCENT TIMELINE GUIDE: LEFT(TOP) → MIDDLE(HEART) → RIGHT(BASE)
+                </div>
+            `;
+            perfWrap.innerHTML += d.perfumes.map(p => {
+                const meta = perfumeMeta[p] || {top:"-", mid:"-", base:"-", path:"M0,50 Q200,50 400,50", color:"#eee"};
+                return `
+                <li class="scent-card">
+                    <div class="scent-img-box"><img src="${p.split(' - ')[1].toLowerCase().replace(/ /g,'_')}.jpg" width="120" onerror="this.src='https://via.placeholder.com/120'"></div>
+                    <div>
+                        <span style="font-family:var(--serif); font-size:2.2rem; display:block;">${p}</span>
+                        <div class="note-info">
+                            <p class="note-line"><b>Top</b> ${meta.top}</p>
+                            <p class="note-line"><b>Middle</b> ${meta.mid}</p>
+                            <p class="note-line"><b>Base</b> ${meta.base}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <svg class="timeline-svg" viewBox="0 0 400 80">
+                            <line x1="0" y1="70" x2="400" y2="70" stroke="#eee" stroke-width="1" />
+                            <path class="curve-path" d="${meta.path}" fill="none" stroke="${meta.color}" stroke-width="3" />
+                        </svg>
+                    </div>
+                </li>`;
+            }).join('');
+            document.getElementById('result-page').scrollTo(0,0);
+        }
     </script>
 </body>
 </html>
